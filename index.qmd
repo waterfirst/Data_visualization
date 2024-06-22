@@ -20,7 +20,7 @@ execute:
 lightbox: true
 ---
 
-![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz-gTT8aJH9wBSKM0Kw24swq5v9wNqEauhWlRcuQchnHBGWN8_Kc09gYSKp1H_dQpnt_0&usqp=CAU)
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/1200px-R_logo.svg.png)
 
 ## 1 Introduction
 
@@ -54,13 +54,13 @@ lightbox: true
 
 Back end를 담당하는 데이터 전처리 및 시각화는 tidyverse 패키지를 이용하여 진행하고 필요할 경우, 추가 패키지를 이용할 것입니다.
 
-실전에서 바로 쓸 수 있도록 기본 예제 데이터를 이용하여 학습하고 각자 자신의 자주 사용하는 데이터를 이용하여 반복 적으로 하던 일을 코딩을 통해 줄이고 더 창의적인 일에 시간을 쓸 수 있도록 4주 과정으로 만들었습니다.
+실전에서 바로 쓸 수 있도록 기본 예제 데이터를 이용하여 학습하고 각자 자신의 자주 사용하는 데이터를 이용하여 반복 적으로 하던 일을 코딩을 통해 줄이고 더 창의적인 일에 시간을 쓸 수 있도록 6주 과정으로 만들었습니다. (주1회 2\~3시간)
 
 <br/>
 
 ## 2 강의순서
 
-1.  데이터 전처리 수업 (1주차)
+1.  R 설치, 기본문법 (1주차)
 
     <https://dplyr.tidyverse.org/articles/dplyr.html>
 
@@ -68,11 +68,17 @@ Back end를 담당하는 데이터 전처리 및 시각화는 tidyverse 패키�
 
     <https://m-clark.github.io/data-processing-and-visualization/intro.html>
 
-3.  데이터 전처리 및 시각화 (3주차)
+3. 데이터 전처리 문제 풀이 (3주차)  
+
+
+4. 데이터 전처리 및 시각화 (4차)
 
     <https://r-graph-gallery.com/>
 
-4.  실전 문제 (4주차)
+5. 다양한 데이터 시각화 연습 (5주차)
+
+
+6. 실전 문제 (6주차)
 
     -   2d, 3d 이미지화
 
@@ -83,3 +89,31 @@ Back end를 담당하는 데이터 전처리 및 시각화는 tidyverse 패키�
         <https://waterfirst.github.io/LENS_EXPERIMENT/>
 
 ------------------------------------------------------------------------
+
+## 3 강의전 사전 준비(프로그램 설치)
+
+
+
+(#1\~3까지 하고, #4~7은 나중에\~\~)
+
+1.  R 설치 : <https://posit.co/download/rstudio-desktop/>
+
+2.  RStudio 설치 <https://posit.co/download/rstudio-desktop/>
+
+3.  Quarto CLI설치 : <https://quarto.org/docs/download/>
+
+4.  Latex 설치 : (Rstudio 터미널창) **\$ quarto install tinytex**
+
+5.  출판용 사이트 가입 : <https://quartopub.com/>
+
+6.  github 가입 : <https://github.com/>
+
+7.  git 설치 : <https://git-scm.com/download/win>
+
+\[Quarto \]<https://quarto.org/docs/presentations/revealjs/>
+
+프로그램을 배울 때, 다운로드, 설치, 환경설정만 하면 50%는 이미 배운것입니다. \^\^
+
+### RStudio 설명
+
+![](./images/rstudio_window.png)
