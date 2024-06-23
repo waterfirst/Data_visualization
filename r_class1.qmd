@@ -183,7 +183,7 @@ ex) 상용 프로그램 : 엑셀 , 미니탭, 오리진, 매트랩, 스팟파이
 ```
 
 ::: callout-tip
-### 4-2.  데이터 탐색 기본 함수
+### 4-2. 데이터 탐색 기본 함수
 
 `head` : 앞 6개 행 보기
 
@@ -213,7 +213,7 @@ ex) 상용 프로그램 : 엑셀 , 미니탭, 오리진, 매트랩, 스팟파이
 
 <br/>
 
-###  4-3. Tidyverse 
+### 4-3. Tidyverse
 
 \[참고 자료\]<https://rstudio.github.io/cheatsheets/html/data-transformation.html>
 
@@ -233,6 +233,8 @@ group_by(특정열 그룹화), summarise(통계치 계산) :
 
 df %>% group_by(열이름) %>% summarise(평균=mean(열이름))
 열합치기(inner_join, full_join, left_join, right_join) : inner_join(df1, df2, by=“name”)
+
+separate(특정기호로 분리) : df %>% separate(열이름, into = c("a", "b"), sep = "_")
 
 na가 있는 행 제거하기(na.omit) : na.omit(df)
 
@@ -647,7 +649,6 @@ ymd_hms(time)
 
 ### [5-4. 강수량 분석]{style="color:blue;"}
 
-
 *\[출처\] 1주차 예상문제 (실기1 유형) (이기적 스터디 카페)*
 
 dataurl = https://raw.githubusercontent.com/Datamanim/datarepo/main/weather/weather2.csv
@@ -761,7 +762,22 @@ head(gapminder)
    
 ```
 
-6.  NA 처리하기 <https://tidyr.tidyverse.org/reference/fill.html>
+6.  구글시트에서 불러오기
+
+\[참고\] <https://googlesheets4.tidyverse.org/>
+
+```{r}
+
+#install.packages("googlesheets4")
+library(googlesheets4)
+gs4_deauth()
+
+df <- read_sheet("https://docs.google.com/spreadsheets/d/1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w/edit?gid=0#gid=0")
+
+head(df)
+```
+
+7.  NA 처리하기 <https://tidyr.tidyverse.org/reference/fill.html>
 
 ```{r}
 sales <- tibble::tribble(
@@ -789,7 +805,7 @@ sales <- tibble::tribble(
 sales %>% fill(year, .direction = "down")
 ```
 
-7.  NA를 평균, 중앙값으로 대체하기
+8.  NA를 평균, 중앙값으로 대체하기
 
 ```{r}
 head(airquality)
@@ -1171,6 +1187,36 @@ htmlwidgets::saveWidget(p2, "myplot.html")
 
 ## 6. Day4 (연습 문제)
 
-아래 사이트에서 포토 코팅/노광/현상 시간에 따른 2종의 PR 의 CD를 분석하라.
+1.  아래 사이트에서 포토 코팅/노광/현상 시간에 따른 2종의 PR 의 CD를 분석하라.
 
 \[Kaggle site\]<https://www.kaggle.com/datasets/waterfirst/photolithography-process-data>
+
+2.  지도그리기
+
+\[datatoys\]<https://github.com/statgarten/datatoys>
+
+데이터토이에서 맛집 (datatoys::restaurant) 을 이용하여 지도에 표시하기
+
+leaflet 패키지 이용하기 (<https://bigdata-anlysis.tistory.com/34>)
+
+```{r}
+library(datatoys)
+library(tidyverse)
+
+library(gt)
+library(leaflet)
+
+
+set.seed(1234)
+
+df <- datatoys::restaurant 
+gt(df |> head())
+colnames(df)
+df %>% rename(lat = WGS84위도, lng = WGS84경도) %>% 
+  select(lng, lat, 음식점명) -> m
+
+leaflet() %>%  
+  addTiles() %>% 
+  addMarkers(lng = as.numeric(m$lng), lat = as.numeric(m$lat), popup=m$음식점명)
+
+```
