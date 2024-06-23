@@ -60,14 +60,3 @@ set_lib_paths <- function(lib_vec) {
 set_lib_paths("C:/Program Files/R/R-4.3.2/library")
 .libPaths()
 
-
-Sys.setenv("OPENAI_API_KEY" = "sk-proj-ZDeZXBQc2eLvo4M8PpUlT3BlbkFJ69jpkkbeT74OrdyLb197")
-#Set your key for the OpenAI API
-Sys.setenv(OPENAI_API_KEY = "sk-proj-ZDeZXBQc2eLvo4M8PpUlT3BlbkFJ69jpkkbeT74OrdyLb197")
-
-#Set your key for the DreamStudio API
-Sys.setenv(DreamStudio_API_KEY = "sk-proj-ZDeZXBQc2eLvo4M8PpUlT3BlbkFJ69jpkkbeT74OrdyLb197")
-
-library(JuliaCall)
-
-julia_setup()
