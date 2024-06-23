@@ -4,6 +4,7 @@ author: "waterfirst"
 format:
   html:
     toc: true
+    toc-location: left
     embed-resources: true
     link-external-icon: true
     link-external-newwindow: true
@@ -84,7 +85,7 @@ Back end를 담당하는 데이터 전처리 및 시각화는 tidyverse 패키�
 
 ------------------------------------------------------------------------
 
-## 3 강의전 사전 준비(프로그램 설치)
+## 3 강의전 사전 준비
 
 (#1\~3까지 하고, #4\~7은 나중에\~\~)
 
@@ -182,7 +183,7 @@ ex) 상용 프로그램 : 엑셀 , 미니탭, 오리진, 매트랩, 스팟파이
 ```
 
 ::: callout-tip
-## 데이터 탐색 기본 함수 (4종 세트)
+### 4-2.  데이터 탐색 기본 함수
 
 `head` : 앞 6개 행 보기
 
@@ -212,7 +213,7 @@ ex) 상용 프로그램 : 엑셀 , 미니탭, 오리진, 매트랩, 스팟파이
 
 <br/>
 
-###  4-2. Tidyverse (패키지 선물 세트)
+###  4-3. Tidyverse 
 
 \[참고 자료\]<https://rstudio.github.io/cheatsheets/html/data-transformation.html>
 
@@ -245,7 +246,7 @@ na가 있는 열에서 na 는 제거하고 계산하기 (na.rm=T) : mean(df, na.
 
 <br/>
 
-### 4-3. 연습문제
+### 4-4. 연습문제
 
 ![](images/penguin.png)
 
@@ -395,9 +396,9 @@ na가 있는 열에서 na 는 제거하고 계산하기 (na.rm=T) : mean(df, na.
 
 -   \[심화\] airquality 데이터셋에서 Ozone 값 중 이상값을 제외한 평균을 구하라(이상값은 평균에서 1.5\*표준편차 이상값)
 
-## 5. 전처리 연습문제
+## 5. Day2 (전처리 연습문제)
 
-### [1. 유튜브 데일리 인기동영상 분석]{style="color:blue;"}
+### [5-1. 유튜브 데일리 인기동영상 분석]{style="color:blue;"}
 
 *\[출처\] 10주차 예상문제 (실기1 유형) (이기적 스터디 카페)*
 
@@ -547,7 +548,7 @@ df |>
 
 <hr/>
 
-### [2. 넷플릭스 데이터 분석]{style="color:blue;"}
+### [5-2. 넷플릭스 데이터 분석]{style="color:blue;"}
 
 *\[출처\] 9주차 예상문제 (실기1 유형) (이기적 스터디 카페)*
 
@@ -581,7 +582,7 @@ df |> mutate(year = year(Date),
 
 <hr/>
 
-## 날짜 다루기(lubridate)
+### [5-3. 날짜 다루기]{style="color:blue;"}
 
 To learn more about **lubridate** see <https://lubridate.tidyverse.org/>.
 
@@ -644,9 +645,8 @@ ymd_hms(time)
 
 ## 
 
-### [3. 강수량 분석]{style="color:blue;"}
+### [5-4. 강수량 분석]{style="color:blue;"}
 
-#### 2020년도 이화동(서울) , 수영동(부산)의 시간단위의 기온과 강수량 분석\] {style="color:blue;"}
 
 *\[출처\] 1주차 예상문제 (실기1 유형) (이기적 스터디 카페)*
 
@@ -697,7 +697,7 @@ df |>
 
 ```
 
-## 데이터 불러오기와 NA 처리
+## 6. Day3 (데이터 불러와서 전처리, 시각화)
 
 To learn more about **tidyr** see <https://tidyr.tidyverse.org/reference/pivot_longer.html/>.
 
@@ -804,11 +804,11 @@ colSums(is.na(airquality2))
 
 ```
 
-## long-form (pivot_longer)
+### 6-1. long-form (pivot_longer)
 
 pivot_longer : <https://tidyr.tidyverse.org/reference/pivot_longer.html> pivot_wider : <https://tidyr.tidyverse.org/reference/pivot_wider.html>
 
-![](data/longform_wideform.png){width="719"}
+![](images/longform_wideform.png){width="719"}
 
 iris 데이터 : wide form 을 long form으로 만들기
 
@@ -820,7 +820,7 @@ iris |> pivot_longer(cols = Sepal.Length: Petal.Width, names_to = "measure", val
 
 ```
 
-## 5. 시각화 하기
+### 6-2. 시각화 하기
 
 \[참고 자료\]<https://waterfirst.quarto.pub/r_course/#/title-slide> \[참고 자료\]<https://rstudio.github.io/cheatsheets/html/data-visualization.html>
 
@@ -837,7 +837,7 @@ ChickWeight |> ggplot(aes(Time, weight, col=Chick, fill=Diet))+geom_point()+
   theme(legend.position = "none")
 ```
 
-### 산점도 그래프
+#### 산점도 그래프
 
 \[참고자료\]<https://ggplot2.tidyverse.org/index.html>
 
@@ -856,7 +856,7 @@ ggplot(mpg, aes(cty, hwy)) +
 
 ```
 
-### Color 팔레트
+#### Color 팔레트
 
 ```{r}
 library(RColorBrewer)
@@ -875,7 +875,7 @@ scale_colour_brewer(palette="Set1")
 
 \[Sci-Fi\](<https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html>)
 
-### 막대 그래프
+#### 막대 그래프
 
 \[참고자료\]<https://r-charts.com/ranking/bar-plot-ggplot2/>
 
@@ -884,7 +884,7 @@ scale_colour_brewer(palette="Set1")
 library(ggplot2)
 df <- data.frame(group = c("A", "B", "C"),
                  count = c(3, 5, 6))
-ggplot(df, aes(x = group, y = count)) +
+ggplot(df, aes(x = group, y = count, fill=group)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = count), vjust = -1, colour = "black") +
   ylim(c(0, 6.5)) # Increase the limits of the Y-axis if needed 
@@ -896,12 +896,12 @@ ggplot(df, aes(x = group, y = count)) +
 # install.packages("ggplot2")
 library(ggplot2)
 
-ggplot(df, aes(x = group, y = count)) +
+ggplot(df, aes(x = group, y = count, fill=group)) +
   geom_col() 
 
 ```
 
-### Boxplot 그래프
+#### Boxplot 그래프
 
 \[참고자료\]<https://ggplot2.tidyverse.org/reference/geom_boxplot.html>
 
@@ -912,7 +912,7 @@ ggplot(mpg, aes(class, hwy)) + geom_boxplot(aes(colour = drv))
 
 ```
 
-### viloin 그래프
+#### viloin 그래프
 
 \[참고자료\]<https://r-charts.com/es/distribucion/grafico-violin-grupo-ggplot2/>
 
@@ -929,7 +929,7 @@ ggplot(warpbreaks, aes(x = tension, y = breaks, fill = tension)) +
 
 ```
 
-### Density 그래프
+#### Density 그래프
 
 \[참고자료\]<https://r-charts.com/es/distribucion/grafico-densidad-grupo-ggplot2/>
 
@@ -956,7 +956,7 @@ ggplot(df, aes(x = x, fill = grupo)) +
 
 ```
 
-### Pair 그래프
+#### Pair 그래프
 
 \[참고자료\]<https://r-charts.com/es/correlacion/ggpairs/>
 
@@ -976,7 +976,7 @@ ggpairs(iris, columns = 1:4, aes(color = Species, alpha = 0.5),
 
 ```
 
-### Sankey 그래프
+#### Sankey 그래프
 
 \[참고자료\]<https://r-charts.com/es/flujo/diagrama-sankey-ggplot2/>
 
@@ -1011,77 +1011,7 @@ ggplot(df, aes(x = x,
 
 ```
 
-### 국회의원의석수 그래프
-
-\[참고자료\]<https://r-charts.com/es/parte-todo/ggparliament/>
-
-```{r}
-# install.packages("ggparliament")
-library(ggparliament)
-# install.packages("tidyverse")
-library(tidyverse)
-# Datos
-ru <- election_data %>%
-  filter(country == "Russia" & year == 2016)
-# Data frame a ser usado
-ru_semicircle <- parliament_data(election_data = ru,
-                                 type = "semicircle", # Tipo de parlamento
-                                 parl_rows = 10,      # Número de filas del parlamento
-                                 party_seats = ru$seats) # Asientos por partido
-
-ggplot(ru_semicircle, aes(x = x, y = y, colour = party_short)) +
-  geom_parliament_seats() + 
-  theme_ggparliament() +
-  labs(title = "Rusia, 2016") +
-  scale_colour_manual(values = ru_semicircle$colour, 
-                      limits = ru_semicircle$party_short)  
- 
- 
- 
-
-```
-
-대한민국 22대 국회의원 의석수를 표시하시오 <https://open.assembly.go.kr/portal/assm/assmPartyNegotiationPage.do> \[color hexacode\]<https://htmlcolorcodes.com/>
-
-```{r}
-
-
-library(ggparliament)
-df <- tibble::tribble(
-  ~번호,   ~전국,       ~정당,   ~명,
-   1L, "지역구",  "더불어민주당", 161L,
-   2L, "지역구",    "국민의힘",  90L,
-   3L, "지역구",   "새로운미래",   1L,
-   4L, "지역구",    "개혁신당",   1L,
-   5L, "지역구",     "진보당",   1L,
-   6L,  "비례", "더불어민주연합",  14L,
-   7L,  "비례",   "국민의미래",  18L,
-   8L,  "비례",    "개혁신당",   2L,
-   9L,  "비례",   "조국혁신당",  12L
-  ) |> 
-  mutate(no = c(1,3,4,2,9,6,7,8,5))
-
- 
-
-df_semicircle <- parliament_data(election_data = df,
-                                 type = "semicircle", 
-                                 parl_rows = 10,      
-                                 party_seats = df$명) 
-
-
-ggplot(df_semicircle, aes(x = x, y = y, colour =fct_reorder(정당, -명))) +
-  geom_parliament_seats() + 
-  theme_ggparliament() +
-  labs(title = "South Korea, 2024") +
-  scale_colour_manual(values = c("#0000FF", "#FF0000", 
-                                 "#FF0000", "#0000FF", 
-                                 "#0073CF", "#FFB233", 
-                                 "#33FF42", "#E333FF"))
-
-
-```
-
-### 그래프 분할하기
+#### 그래프 분할하기
 
 -   facet_grid
 
@@ -1106,7 +1036,7 @@ ggplot(df, aes(assists, points)) +
   facet_wrap(position~team)
 ```
 
-### Patchwork 패키지
+#### Patchwork 패키지
 
 ```{r}
 library(patchwork)
@@ -1125,7 +1055,7 @@ p4 <- ggplot(mtcars) + geom_bar(aes(carb))
       p4
 ```
 
-### 논문용 Theme
+#### 논문용 Theme
 
 ```{r}
 theme_Publication <- function(base_size=14, base_family="helvetica") {
@@ -1173,7 +1103,7 @@ scale_colour_Publication <- function(...){
 
 ```
 
-### Plotly 그래프
+#### Plotly 그래프
 
 ```{r}
 
@@ -1229,7 +1159,7 @@ library(plotly)
 ggplotly(p)
 ```
 
-### 그래프 저장
+#### 그래프 저장
 
 ```{r}
 p
@@ -1239,312 +1169,8 @@ p2 <- ggplotly(p)
 htmlwidgets::saveWidget(p2, "myplot.html")
 ```
 
-## 3. 시각화 연습 문제
+## 6. Day4 (연습 문제)
 
 아래 사이트에서 포토 코팅/노광/현상 시간에 따른 2종의 PR 의 CD를 분석하라.
 
 \[Kaggle site\]<https://www.kaggle.com/datasets/waterfirst/photolithography-process-data>
-
-## 4. 머신러닝
-
-### 회귀(regression) : 펭귄부리 높이
-
-```         
-1. penquin 데이터의 행번호를 id 열로 만들어라 (mutate)  
-
-2. penquin 데이터의 1행~300행까지 데이터를 train으로 만들고, bill_depth 열을 제외하고 X_train, id와 bill_depth 열을 이용하여 y_train을 만들어라  
-
-3. penquin 데이터의 300행~마지막행까지  데이터를 test 로 만들고, bill_depth 열을 제외하고 y_train, id와 bill_depth 열을 이용하여 y_test을 만들어라.     
-
-4. X_train, y_train 으로 모델링을 한 후, X_test를 이용하여 y_test의 bill_depth를 예측하라.
-
-5. 예측한 값을 "수험번호.csv" 파일로 제출하라.
-```
-
--   패키지 불러오기
-
-```{r}
-library(dplyr)
-library(caret)
-library(ModelMetrics)
-library(randomForest)
-library(palmerpenguins)
-
-
-```
-
--   데이터 불러오기
-
-```{r}
-## 데이터 불러오기 (실제 시험장에서는 아래와 같이 간단하게 불러옴)
-
-#X_train <- read.csv("../input/.../X_train.csv", stringsAsFactors=T)
-#y_train <- read.csv("../input/.../y_train.csv", stringsAsFactors=T)
-
-#X_test <- read.csv("../input/.../X_test.csv", stringsAsFactors=T)
-#y_test <- read.csv("../input/.../y_test.csv", stringsAsFactors=T)
-
-#penquin 데이터를 이용하여 데이터 train, test 데이터 만들기
-
-penguins <- penguins %>% mutate(id=1:nrow(penguins)) |> 
-  rename(bill_depth = bill_depth_mm,
-         bill_length = bill_length_mm ,
-         flipper_length  = flipper_length_mm,
-         body_mass  = body_mass_g )
-
-X_train <- penguins[1:300, -4]
-y_train <- penguins[1:300, c(4,9)]
-X_test <- penguins[301:344, -4]
-y_test <- penguins[301:344, c(4,9)]
-y_test[,1] <- 0
-```
-
--   데이터 합치기
-
-```{r}
-train<-inner_join(y_train, X_train, by="id")
-
-str(train)
-str(X_test)
-
-```
-
--   불필요한 컬럼 제거하기
-
-```{r}
-# id 열 제거하기
-train<- train[,-2]
-test<-X_test[,-8]
-
-# na 가 있는 열 확인하기
-colSums(is.na(train)) 
-```
-
--   NA가 있는지 확인하기
-
-```{r}
-colSums(is.na(test))
-```
-
--   NA가 있는 행 삭제하기
-
-```{r}
-# na 가 있는 열 제거하기
-train<- train %>% na.omit()
-test<- test %>% na.omit()
-```
-
--   훈련용/검증용 데이터 나누기
-
-```{r}
-#훈련/검증 데이터  70:30 으로 나누기
-
-idx<-createDataPartition(train$bill_depth, p=0.7, list=F)
-train_df<-train[idx,]
-test_df<-train[-idx,]
-```
-
--   모델 만들고 학습시키기
-
-```{r}
-m1<-train(bill_depth~., data=train_df, method="glm") #로지스틱 회귀 모델
-
-m2<-randomForest(bill_depth~., data=train_df, ntree=100) #랜덤포레스트 모델
-```
-
--   학습된 모델로 예측하기
-
-```{r}
-p1<-predict(m1, test_df)
-
-p2<-predict(m2, test_df)
-```
-
--   모델 정합도 평가하기 (R\^2 로 판단)
-
-```{r}
-caret::R2(test_df$bill_depth, p1) #로지스틱 회귀분석
-caret::R2(test_df$bill_depth, p2) #랜덤포레스트
-```
-
--   최종모델로 모델링, 예측하기
-
-```{r}
-## 랜덤포레스트 모델로 최종 모델링 하기
-
-
-m<-randomForest(bill_depth~., data=train, ntree=100)
-
-p<-predict(m, test)
-```
-
--   데이터 제출하기
-
-```{r}
-## p값을 문자열로 바꾸고 csv 파일로 제출하기
-
-p<-as.character(p)
-y_test$species <- p
-
-write.csv(y_test, "1234.csv", row.names=F)
-
-
-## 제출된 값 다시 한번 확인하기
-
-abc<-read.csv("1234.csv")
-
-head(abc)
-```
-
-### 회귀연습문제
-
--   중고차 가격 예측하기
-
-\[DATA\]<https://www.kaggle.com/datasets/kukuroo3/used-car-price-dataset-competition-format/versions/1>
-
-### 분류(Classification) : 펭귄종류
-
-```         
-1. penquin 데이터의 행번호를 id 열로 만들어라 (mutate)  
-
-2. penquin 데이터의 1행~300행까지 데이터를 train으로 만들고, bill_depth 열을 제외하고 X_train, id와 bill_depth 열을 이용하여 y_train을 만들어라  
-
-3. penquin 데이터의 300행~마지막행까지  데이터를 test 로 만들고, bill_depth 열을 제외하고 y_train, id와 bill_depth 열을 이용하여 y_test을 만들어라.     
-
-4. X_train, y_train 으로 모델링을 한 후, X_test를 이용하여 y_test의 bill_depth를 예측하라.
-
-5. 예측한 값을 "수험번호.csv" 파일로 제출하라.
-```
-
--   패키지 불러오기
-
-```{r}
-library(dplyr)
-library(caret)
-library(ModelMetrics)
-library(randomForest)
-
-```
-
--   데이터 불러오기
-
-```{r}
-## 데이터 불러오기 (실제 시험장에서는 아래와 같이 간단하게 불러옴)
-
-#X_train <- read.csv("../input/.../X_train.csv", stringsAsFactors=T)
-#y_train <- read.csv("../input/.../y_train.csv", stringsAsFactors=T)
-
-#X_test <- read.csv("../input/.../X_test.csv", stringsAsFactors=T)
-#y_test <- read.csv("../input/.../y_test.csv", stringsAsFactors=T)
-
-#penquin 데이터를 이용하여 데이터 train, test 데이터 만들기
-rm(list=ls())
-penguins <- penguins %>% mutate(id=1:nrow(penguins)) |> 
-  rename(bill_depth = bill_depth_mm,
-         bill_length = bill_length_mm ,
-         flipper_length  = flipper_length_mm,
-         body_mass  = body_mass_g )
-
-X_train <- penguins[1:300, -1]
-y_train <- penguins[1:300, c(1,9)]
-X_test <- penguins[301:344, -1]
-y_test <- penguins[301:344, c(1,9)]
-y_test[,1] <- 0
-```
-
--   데이터 합치기
-
-```{r}
-train<-inner_join(y_train, X_train, by="id")
-
-str(train)
-str(X_test)
-```
-
--   불필요한 컬럼 제거하기
-
-```{r}
-# id 열 제거하기
-train<- train[,-2]
-test<-X_test[,-8]
-
-# na 가 있는 열 확인하기
-colSums(is.na(train)) 
-colSums(is.na(test))
-
-# na 가 있는 열 제거하기
-train<- train %>% na.omit()
-test<- test %>% na.omit()
-```
-
--   훈련용/ 검증용 데이터 분리
-
-```{r}
-#훈련/검증 데이터  70:30 으로 나누기
-
-idx<-createDataPartition(train$species, p=0.7, list=F)
-train_df<-train[idx,]
-test_df<-train[-idx,]
-```
-
--   모델 만들기
-
-```{r}
-m1<-train(species~., data=train_df, method="rpart") #의사결정나무 모델
-
-m2<-randomForest(species~., data=train_df, ntree=100) #랜덤포레스트 모델
-```
-
--   예측하기
-
-```{r}
-p1<-predict(m1, test_df)
-
-p2<-predict(m2, test_df)
-```
-
--   모델 평가히기
-
-```{r}
-caret::confusionMatrix(test_df$species, p1)$overall[1] #의사결정나무/accuracy
-caret::confusionMatrix(test_df$species, p1)$byClass[7] #의사결정나무/F1
-
-caret::confusionMatrix(test_df$species, p2)$overall[1] #랜덤포레스트/accuracy
-caret::confusionMatrix(test_df$species, p2)$byClass[7] #랜덤포레스트/F1
-```
-
--   최종모델로 모델링, 예측하기
-
-```{r}
-## 랜덤포레스트 모델로 최종 모델링 하기
-
-
-m<-randomForest(species~., data=train, ntree=100)
-
-p<-predict(m, test)
-```
-
--   데이터 제출하기
-
-```{r}
-## p값을 문자열로 바꾸고 csv 파일로 제출하기
-
-p<-as.character(p)
-y_test$species <- p
-
-
-write.csv(y_test, "1234.csv", row.names=F)
-
-
-## 제출된 값 다시 한번 확인하기 
-
-abc<-read.csv("1234.csv")
-
-head(abc)  
-```
-
-### 분류연습문제
-
--   이직할 사람 찾아내기
-
-\[DATA\]<https://www.kaggle.com/datasets/kukuroo3/hr-data-predict-change-jobscompetition-form/versions/1>
