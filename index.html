@@ -3774,9 +3774,14 @@ Hint
 <li>gapminder |&gt; filter(year == 2007) |&gt; arrange(-pop) |&gt; slice(1:10) |&gt; group_by(country) |&gt; summarise(인구수_억명 = round(pop/100000000,1), 기대수명_세 = round(lifeExp) ) |&gt; arrange(-인구수_억명)</li>
 <li>gapminder |&gt; select(country, year, lifeExp) |&gt; filter(year %in% c(1952, 2007)) |&gt; pivot_wider(names_from = year, values_from = lifeExp) |&gt; mutate(ratio = (<code>2007</code>- <code>1952</code>)/(2007-1952)) |&gt; arrange(-ratio)</li>
 <li>gapminder |&gt; filter(year == 2002) |&gt; group_by(continent) |&gt; summarise(avg = mean(gdpPercap, na.rm=T), <code>σ</code>= sd(gdpPercap, na.rm=T))</li>
-<li></li>
-<li></li>
+<li>nor_sd = function(x){ result = (x - mean(x)) / sd(x) return(result) }</li>
 </ol>
+<p>gapminder |&gt; mutate(life_nor = nor_sd(lifeExp) )</p>
+<ol start="6" type="1">
+<li>nor_minmax = function(x){ result = (x - min(x)) / (max(x) - min(x)) return(result) }</li>
+</ol>
+<p>gapminder |&gt;</p>
+<p>filter(country != “Kuwait”) |&gt; mutate(gdp_sd = nor_minmax(gdpPercap) )</p>
 </div>
 </div>
 </div>
@@ -4188,7 +4193,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","loop":false,"openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;

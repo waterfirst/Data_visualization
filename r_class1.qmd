@@ -472,7 +472,23 @@ nor_sd = function(x){
 3.  gapminder \|\> select(country, year, lifeExp) \|\> filter(year %in% c(1952, 2007)) \|\> pivot_wider(names_from = year, values_from = lifeExp) \|\> mutate(ratio = (`2007`- `1952`)/(2007-1952)) \|\> arrange(-ratio)
 4.  gapminder \|\> filter(year == 2002) \|\> group_by(continent) \|\> summarise(avg = mean(gdpPercap, na.rm=T), `σ`= sd(gdpPercap, na.rm=T))
 5.  
+nor_sd = function(x){
+  result = (x - mean(x)) / sd(x)
+  return(result)
+}
+
+gapminder |> mutate(life_nor = nor_sd(lifeExp) )
+
 6.  
+nor_minmax = function(x){
+  result = (x - min(x)) / (max(x) - min(x))
+  return(result)
+}
+
+gapminder |> 
+  
+  filter(country != "Kuwait") |> 
+  mutate(gdp_sd = nor_minmax(gdpPercap) ) 
 :::
 
 ------------------------------------------------------------------------
