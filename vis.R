@@ -4,6 +4,7 @@ library(gapminder)
 library(crosstalk)
 library(leaflet)
 library(flipbookr)
+glimpse(gapminder)
 
 gapminder %>% 
   ggplot(aes(x=year, 

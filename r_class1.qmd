@@ -244,6 +244,32 @@ na가 있는 열에서 na 는 제거하고 계산하기 (na.rm=T) : mean(df, na.
 행합치기(rbind, bind_rows) : rbind(df1, df2) or bind_rows(df1, df2)
 
 중복없는 값 찾기(distinct) : df %>% distinct ("열이름")
+
+행의 수 세기 : n(), count()
+```
+
+### 4-4. long_form, wide_form
+
+![](https://www.statology.org/wp-content/uploads/2021/12/wideLong1-1.png)
+
+iris data를 이용하여 꽃잎 길이, 넓이, 꽃받임 길이, 넓이를 long form으로 바꾸어보자.
+
+```{r}
+library(tidyverse)
+head(iris)
+
+iris |> pivot_longer(cols = Sepal.Length:Petal.Width, names_to = "measure", values_to = "value") |> head()
+
+iris |> pivot_longer(cols = Sepal.Length:Petal.Width, 
+                     names_to = c("name1", "name2"),
+                     names_sep ='\\.') |> head()
+
+iris_long <- 
+  iris |> pivot_longer(cols = Sepal.Length:Petal.Width, names_to = "measure", values_to = "value")
+
+
+iris_long |> pivot_wider(
+    names_from = measure,  values_from = value) |> unnest() |> head()
 ```
 
 <br/>
@@ -394,9 +420,62 @@ na가 있는 열에서 na 는 제거하고 계산하기 (na.rm=T) : mean(df, na.
 
     ```
 
--   \[심화\] penquin 데이터를 표준화(평균 0, 표준편차 1), 정규화(1과 0 사이로 만듦) 하라
+### 4-5. 숙제
 
--   \[심화\] airquality 데이터셋에서 Ozone 값 중 이상값을 제외한 평균을 구하라(이상값은 평균에서 1.5\*표준편차 이상값)
+::: callout-note
+Data : gapminder 연도별, 나라별 기대수명, 인구수, 1인당 GDP
+
+`library(gapminder)` 로 데이터 불러오기
+:::
+
+![](images/gapminder.png)
+
+::: callout-tip
+## 문제
+
+1.  2007년 대륙별 나라수는 몇 나라인가?
+
+2.  가장 최근 연도에서 인구수가 많은 상위 10개 나라를 뽑아서 나라별 인구수와 기대 수명을 구하라. (이때 인구수는 13.2억명, 기대수명은 73세로 단위를 맞추어라. ) )
+
+3.  연도별 기대수명이 가장 빠르게 증가한 나라 10개를 순서대로 나열하시오. (1952년, 2007년 비교)
+
+4.  2002년도 대륙별 1인당 gpd의 평균과 표준편차는 어떻게 되는가?
+
+5.  기대수명 데이터를 표준화(평균 0, 표준편차 1) 하라.
+
+6.  Kuwait 를 제외하고, 1인당 gpd 데이터를 정규화(1과 0 사이로 만듦) 하라
+:::
+
+::: {.callout-warning}
+## Hint
+`정규화 함수`
+nor_minmax = function(x){
+  result = (x - min(x)) / (max(x) - min(x))
+  return(result)
+}
+
+`표준화 함수`
+nor_sd = function(x){
+  result = (x - mean(x)) / sd(x)
+  return(result)
+}
+
+:::
+
+![](images/nor_scale.png)
+
+::: {.callout-caution collapse="true"}
+## 정답(R code)
+
+1.  gapminder \|\> filter(year == 2007) \|\> group_by(continent) \|\> summarise(n= n())
+2.  gapminder \|\> filter(year == 2007) \|\> arrange(-pop) \|\> slice(1:10) \|\> group_by(country) \|\> summarise(인구수_억명 = round(pop/100000000,1), 기대수명_세 = round(lifeExp) ) \|\> arrange(-인구수_억명)
+3.  gapminder \|\> select(country, year, lifeExp) \|\> filter(year %in% c(1952, 2007)) \|\> pivot_wider(names_from = year, values_from = lifeExp) \|\> mutate(ratio = (`2007`- `1952`)/(2007-1952)) \|\> arrange(-ratio)
+4.  gapminder \|\> filter(year == 2002) \|\> group_by(continent) \|\> summarise(avg = mean(gdpPercap, na.rm=T), `σ`= sd(gdpPercap, na.rm=T))
+5.  
+6.  
+:::
+
+------------------------------------------------------------------------
 
 ## 5. Day2 (전처리 연습문제)
 

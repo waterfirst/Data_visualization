@@ -109,3 +109,371 @@ Back end를 담당하는 데이터 전처리 및 시각화는 tidyverse 패키�
 ### RStudio 설명
 
 ![](./images/rstudio_window.png)
+
+---
+
+
+
+## 4 Day1
+
+-   데이터 분석과 시각화를 하는데 R이 최선인가?
+
+ex) 상용 프로그램 : 엑셀 , 미니탭, 오리진, 매트랩, 스팟파이어
+
+오픈소스 : 파이썬, R
+
+-   왜 데이터 분석 및 시각화가 필요한가? GPT 시대인데...
+
+-   내가 하고 있는 분야에 데이터는 정형화된 데이터인가?(숫자) 아니면 비정형 데이터인가(문자)
+
+-   데이터 분석의 최종 목적은 무엇인가?
+
+------------------------------------------------------------------------
+
+### 4-1. R Basic
+
+[1. 데이터 형식]{style="color:red;"}
+
+```         
+숫자형(numeric) : num(숫자형), int(정수형), dbl(실수형)
+문자형(character) : chr
+범주형(factor) : fct
+논리형(logical) : logi
+결측 (Not Available) : NA
+무한대 (Infinite) : Inf
+데이터 형식 알아보기 : class(변수명) is.numeric(변수명), is.character(변수명), is.factor(변수명)
+데이터 형식 바꾸기 : as.numeric(변수명), as.factor(변수명), as.character(변수명), as.logical(변수명)
+```
+
+::: callout-note
+범주형 변수(factor) : 그래프를 그리거나 통계적 분석시 유용함
+
+데이터를 `열별`로 모아 놓은 `dataframe`, `tibble` 이 실제 분석에 이용
+
+`list`, `matrix`, `array` 형태도 있음
+:::
+
+<br/>
+
+[2. 자주 사용 하는 함수]{style="color:red;"}
+
+```         
+평균(mean) : mean(변수)
+중위수(median) : median(변수)
+최대값(max) : max(변수)
+최소값(min) : min(변수)
+합(sum) : sum(변수)
+표준편차(sd) : sd(변수)
+분산(var) : var(변수)
+절대값(abs) : abs(변수)
+반올림(round) : round(변수, 반올림할 소수점 아래수)
+제곱근(sqrt) : sqrt(변수)
+원소갯수, 문자열길이(length) : length(변수)
+행, 열의 수(dim) : dim(df)
+프린트(print) : print(변수) / print(“문자”)
+조건(ifelse) : ifelse(x>10, “a”, “b”)
+중복없이 관측치 종류(unique) : unique(변수)
+문자패턴 찾기(grep, grepl) : grep(“문자”, df):열번호 출력, grepl(“문자”, df):true/false로 출력
+문자패턴 찾아 바꾸기(gsub) : gsub(“이전문자”, “새로운 문자”, df)
+열갯수(ncol) : ncol(df)
+행갯수(nrow) : nrow(df)
+열이름(colnames) : colnames(df)
+행이름(colnames) : rownames(df)
+빈도수 구하기(table) : table(변수)
+정렬하기(sort) : 내림차순 sort(변수), 오름차순 sort(변수, decreasing = TRUE)
+열이름(names, colnames) : names(변수)
+최대, 최소위치 찾기(which.max, which.min) : which.max(변수), which.min(변수)
+```
+
+::: callout-tip
+### 4-2. 데이터 탐색 기본 함수
+
+`head` : 앞 6개 행 보기
+
+`tail` : 뒤 6개 행 보기
+
+`summary` : 기술 통계 간단히 보기
+
+`str` : 데이터 형식 보기
+:::
+
+<br/>
+
+[3. 연산 기호]{style="color:red;"}
+
+```         
+"
+* (곱하기) : x*2
+/ (나누기) : x/2
+%/% (나눗셈의 몫) : 16%/%3 = 5
+%% (나눗셈의 나머지) : 16%/%3 = 1
+== (일치, True or False) : 3==5, False
+!= (불일치) : 3!=5, True
+& (and) : x > 2 & x < 10
+| (or) : x < 2 | x > 10
+"
+```
+
+<br/>
+
+### 4-3. Tidyverse
+
+\[참고 자료\]<https://rstudio.github.io/cheatsheets/html/data-transformation.html>
+
+```         
+%>% (파이프라인, 왼쪽 데이터프레임을 오른쪽 함수에 넣어라) : df %>% head()
+
+filter (조건에 맞는 행 추출) : df %>% filter(컬럼명 == “a”)
+
+select(특정열 선택) : df %>% select(열번호) / df[, 열번호]
+
+slice(특정행 선택) : df %>% slice(행번호) / df[행번호, ]
+mutate(특정열 추가) : df %>% mutate(새로운 열이름 = )
+rename(열이름 바꾸기) : df %>% rename(새로운 열이름 = 이전 열이름)
+arrange(정렬하기) : 오름차순 : df %>% arrange(열이름), 내림차순 : df %>% arrange(desc(열이름))
+
+group_by(특정열 그룹화), summarise(통계치 계산) :
+
+df %>% group_by(열이름) %>% summarise(평균=mean(열이름))
+열합치기(inner_join, full_join, left_join, right_join) : inner_join(df1, df2, by=“name”)
+
+separate(특정기호로 분리) : df %>% separate(열이름, into = c("a", "b"), sep = "_")
+
+na가 있는 행 제거하기(na.omit) : na.omit(df)
+
+na가 있는 열에서 na 는 제거하고 계산하기 (na.rm=T) : mean(df, na.rm=T)
+
+열합치기(cbind, bind_cols) : cbind(df1, df2) or bind_cols(df1, df2)
+행합치기(rbind, bind_rows) : rbind(df1, df2) or bind_rows(df1, df2)
+
+중복없는 값 찾기(distinct) : df %>% distinct ("열이름")
+
+행의 수 세기 : n(), count()
+```
+
+### 4-4. long_form, wide_form
+
+![](https://www.statology.org/wp-content/uploads/2021/12/wideLong1-1.png)
+
+iris data를 이용하여 꽃잎 길이, 넓이, 꽃받임 길이, 넓이를 long form으로 바꾸어보자.
+
+```{r}
+library(tidyverse)
+head(iris)
+
+iris |> pivot_longer(cols = Sepal.Length:Petal.Width, names_to = "measure", values_to = "value") |> head()
+
+iris |> pivot_longer(cols = Sepal.Length:Petal.Width, 
+                     names_to = c("name1", "name2"),
+                     names_sep ='\\.') |> head()
+
+iris_long <- 
+  iris |> pivot_longer(cols = Sepal.Length:Petal.Width, names_to = "measure", values_to = "value")
+
+
+iris_long |> pivot_wider(
+    names_from = measure,  values_from = value) |> unnest() |> head()
+```
+
+<br/>
+
+### 4-4. 연습문제
+
+![](images/penguin.png)
+
+-   palmer penguin을 df에 넣고 앞 6개 행을 살펴보라.
+
+    ```{r}
+    #install.packages("palmerpenguins")
+    library(palmerpenguins)
+    df <-  penguins
+    head(df)
+    ```
+
+-   데이터 탐색을 하라 (EDA : str, summary 이용)
+
+    ```{r}
+    str(df)
+    summary(df)
+    ```
+
+-   NA가 있는 열 확인하라
+
+    ```{r}
+    colSums(is.na(df))
+    ```
+
+-   컬럼명에서 \_mm 제거하고 6개 행 보기(rename 이용 )
+
+    ```{r}
+    library(tidyverse)
+    df |> rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      head()
+      
+    ```
+
+-   Adelie 펭귄의 부리 길이 평균은 얼마일까?
+
+    ```{r}
+    df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      filter(species =="Adelie")  |> 
+      summarise("부리길이" = mean(bill_length, na.rm=T))
+    ```
+
+-   각 펭귄의 부리 길이, 부리 높이의 평균 구하라(소수 첫째자리까지 구하라)
+
+    ```{r}
+    df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      group_by(species) %>% summarise("부리길이"=round(mean(bill_length, na.rm=T),1), "부리높이"=round(mean(bill_depth, na.rm=T),1))
+    ```
+
+-   펭귄 종류별 몇마리인가
+
+    ```{r}
+    df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      group_by(species) %>%
+      summarise(n=n())
+    ```
+
+-   펭귄종류, 부리길이, 부리높이 열만 선택해서 보여줘라 (6개 행)
+
+    ```{r}
+    df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      select(species, bill_length, bill_depth) %>% head()
+    ```
+
+-   10행에서 15행을 보여주라.
+
+    ```{r}
+    df %>% slice(10:15)
+    ```
+
+-   새로운 변수를 만들어라 (bill_ratio = bill_lenght/bill_depth) : mutate
+
+    ```{r}
+    df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      mutate(bill_ratio=bill_length/bill_depth) |> 
+      head()
+    ```
+
+-   위 문제에서 NA 가 있는 행은 제거하고 보여줘라
+
+    ```{r}
+    df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      mutate(bill_ratio=bill_length/bill_depth) |> 
+      na.omit() %>% head()
+    ```
+
+-   Adelie, Chinstrap 펭귄의 각각 body_mass가 가장 작은 10개의 평균 부리길이(bill_length)를 구해서 두 평균 차이를 계산하라
+
+    ```{r}
+    avg1 <- df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      filter(species=="Adelie") |> 
+      arrange(body_mass_g) |> 
+      slice(1:10) |> 
+      summarise(bl=mean(bill_length))
+    avg2 <- df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      filter(species=="Chinstrap") |> 
+      arrange(body_mass_g) |> 
+      slice(1:10) |> 
+      summarise(bl=mean(bill_length))
+
+    result<- abs(avg1$bl-avg2$bl)
+    print(result)
+    ```
+
+-   부리 길이(bill_length) 중 최빈값(가장 많은 수)을 찾아라.
+
+    ```{r}
+
+    df |> 
+       rename(bill_length = bill_length_mm,
+                 bill_depth = bill_depth_mm,
+                 flipper_length = flipper_length_mm) |>
+      select(bill_length) |> 
+      table()  -> y
+
+    names(y)[which(y==max(y))] 
+
+    ```
+
+### 4-5. 숙제
+
+::: callout-note
+Data : gapminder 연도별, 나라별 기대수명, 인구수, 1인당 GDP
+
+`library(gapminder)` 로 데이터 불러오기
+:::
+
+![](images/gapminder.png)
+
+::: callout-tip
+## 문제
+
+1.  2007년 대륙별 나라수는 몇 나라인가?
+
+2.  가장 최근 연도에서 인구수가 많은 상위 10개 나라를 뽑아서 나라별 인구수와 기대 수명을 구하라. (이때 인구수는 13.2억명, 기대수명은 73세로 단위를 맞추어라. ) )
+
+3.  연도별 기대수명이 가장 빠르게 증가한 나라 10개를 순서대로 나열하시오. (1952년, 2007년 비교)
+
+4.  2002년도 대륙별 1인당 gpd의 평균과 표준편차는 어떻게 되는가?
+
+5.  기대수명 데이터를 표준화(평균 0, 표준편차 1) 하라.
+
+6.  Kuwait 를 제외하고, 1인당 gpd 데이터를 정규화(1과 0 사이로 만듦) 하라
+:::
+
+::: {.callout-warning}
+## Hint
+`정규화 함수`
+nor_minmax = function(x){
+  result = (x - min(x)) / (max(x) - min(x))
+  return(result)
+}
+
+`표준화 함수`
+nor_sd = function(x){
+  result = (x - mean(x)) / sd(x)
+  return(result)
+}
+
+:::
+
+![](images/nor_scale.png)
+
+::: {.callout-caution collapse="true"}
+## 정답(R code)
+
+1.  gapminder \|\> filter(year == 2007) \|\> group_by(continent) \|\> summarise(n= n())
+2.  gapminder \|\> filter(year == 2007) \|\> arrange(-pop) \|\> slice(1:10) \|\> group_by(country) \|\> summarise(인구수_억명 = round(pop/100000000,1), 기대수명_세 = round(lifeExp) ) \|\> arrange(-인구수_억명)
+3.  gapminder \|\> select(country, year, lifeExp) \|\> filter(year %in% c(1952, 2007)) \|\> pivot_wider(names_from = year, values_from = lifeExp) \|\> mutate(ratio = (`2007`- `1952`)/(2007-1952)) \|\> arrange(-ratio)
+4.  gapminder \|\> filter(year == 2002) \|\> group_by(continent) \|\> summarise(avg = mean(gdpPercap, na.rm=T), `σ`= sd(gdpPercap, na.rm=T))
+5.  
+6.  
+:::

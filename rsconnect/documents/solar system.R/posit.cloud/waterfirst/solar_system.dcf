@@ -1,0 +1,13 @@
+name: solar_system
+title: solar system
+username: waterfirst
+account: waterfirst
+server: posit.cloud
+hostUrl: https://api.posit.cloud/v1
+appId: 8386639
+bundleId: 8802842
+url: https://posit.cloud/content/8386639
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|1234.csv|3d graph.R|ggvis.R|images/logo1.png|images/longform_wideform.png|images/penguin.png|images/rstudio_window.png|index.html|index.qmd|myplot.html|myplot.png|r_class.html|r_class.qmd|r_class1.html|r_class1.qmd|r_class2.qmd|vis.R|기대수명.gif|벽돌깨기.R
