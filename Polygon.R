@@ -1,30 +1,6 @@
 
-ggplot()+
-  geom_polygon(data = cell,aes(x=COORD_X1, y=COORD_Y1, col=name,alpha = 0))  +
-  theme(legend.position = "none")
 
-map <- cell %>%
-  filter(no %in% c(2,4)) %>%
-  group_by(name) %>%
-    summarise(x=mean(COORD_X1), y=mean(COORD_Y1))
-
-
-ggplot()+
-  geom_polygon(data = cell,aes(x=COORD_X1, y=COORD_Y1, col=name,alpha = 0))  +
-  theme(legend.position = "none")+
-  geom_text(data=map, aes(x=x, y=y, col=name, label=name ))
-
-
-ggplot()+
-  geom_polygon(data = cell,aes(x=COORD_X1, y=COORD_Y1, col=name,alpha = 0))  +
-  theme(legend.position = "none")+
-  geom_text(data=map, aes(x=x, y=y, col=name, label=name ))+
-  geom_vline(data=mura, xintercept = mura$x, linetype = 1, size = mura$size/10000, col= "black", alpha = 0.5)+
-  labs(x="", y="")+
-  theme(axis.text.x=element_blank(),
-        axis.text.y=element_blank())
-
-
+library(tidyverse)
 
 mura <- tibble::tribble(
                 ~x,  ~size,
@@ -180,3 +156,27 @@ cell <- tibble::tribble(
 
 
 
+ggplot()+
+  geom_polygon(data = cell,aes(x=COORD_X1, y=COORD_Y1, col=name,alpha = 0))  +
+  theme(legend.position = "none")
+
+map <- cell %>%
+  filter(no %in% c(2,4)) %>%
+  group_by(name) %>%
+  summarise(x=mean(COORD_X1), y=mean(COORD_Y1))
+
+
+ggplot()+
+  geom_polygon(data = cell,aes(x=COORD_X1, y=COORD_Y1, col=name,alpha = 0))  +
+  theme(legend.position = "none")+
+  geom_text(data=map, aes(x=x, y=y, col=name, label=name ))
+
+
+ggplot()+
+  geom_polygon(data = cell,aes(x=COORD_X1, y=COORD_Y1, col=name,alpha = 0))  +
+  theme(legend.position = "none")+
+  geom_text(data=map, aes(x=x, y=y, col=name, label=name ))+
+  geom_vline(data=mura, xintercept = mura$x, linetype = 1, size = mura$size/10000, col= "black", alpha = 0.5)+
+  labs(x="", y="")+
+  theme(axis.text.x=element_blank(),
+        axis.text.y=element_blank())
