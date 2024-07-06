@@ -1,0 +1,324 @@
+---
+title: "R을 이용한 데이터 전처리 숙제 1"
+author: "waterfirst"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    link-external-icon: true
+    link-external-newwindow: true
+    link-external-filter: '^(?:http:|https:)\/\/www\.quarto\.org\/custom'
+editor: visual
+code-fold: false
+Rendering:
+  embed-resources: true
+execute:
+  message : false
+  warning : false
+  error : false
+  echo : true
+lightbox: true
+---
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz-gTT8aJH9wBSKM0Kw24swq5v9wNqEauhWlRcuQchnHBGWN8_Kc09gYSKp1H_dQpnt_0&usqp=CAU)
+
+아래는 데이터 전처리 예제입니다. 문제와 답만 있습니다. 한주 동안 풀어보시고 다음 강의 (7/13 토)에 각자 나누어서 어떻게 풀었는지 설명하는 시간을 갖도록 하겠습니다.
+
+## 1 airquality
+
+*airquality* 데이터 셋
+
+5월부터 9월까지 Ozone(오존), Solar(uv), Wind(풍속), Temp(온도)에 관한 데이터세트이다.
+
+```{r}
+library(tidyverse)
+head(airquality)
+
+```
+
+#### 1. 열별 결측치가 몇개가 있는지 표시하라.
+
+```{r}
+#| echo: false
+
+colSums(is.na(airquality))
+
+```
+
+#### 2. 월별 Ozone의 평균과 Wind의 표준편차를 구하시오.
+
+```{r}
+#| echo: false
+
+airquality |> group_by(Month) |> summarise(Ozone_평균 = mean(Ozone, na.rm=T),  Wind_표준편차 = sd(Wind, na.rm=T))
+
+```
+
+#### 3. 온도는 화씨로 되어 있는데, 섭씨 온도 Temp_C 를 새로운 열로 만들어라. 이때 소수 둘째자리에서 반올림해서 첫째자리까지 보이고 섭씨온도가 가장 높은 날은 몇월 몇일, 몇도인지 표시하라.
+
+**섭씨 = (화씨 − 32) × 5/9**
+
+```{r}
+#| echo: false
+
+airquality |> 
+  mutate(Temp_C = round((Temp-32)*5/9,1)) |> 
+  arrange(-Temp_C) |> 
+  slice(1) |> 
+  select(Month, Day, Temp_C)
+
+
+airquality |> 
+  filter(Temp == max(Temp)) |>
+  mutate(Temp_C = round((Temp-32)*5/9,1)) |> 
+  select(Month, Day, Temp_C)
+```
+
+#### 4. Solar.R이 150 이상인 날 중에 8월\~9월 총 몇일이나 되는가
+
+```{r}
+#| echo: false
+
+airquality |> 
+  filter(Solar.R >= 150) |> 
+  filter(Month %in% c(8, 9)) |> 
+  count()
+
+```
+
+#### 5. Ozone이 결측치가 있는 날 중에 월별 Wind의 세기의 중간값을 구하시오.
+
+```{r}
+#| echo: false
+
+airquality |> 
+  filter(is.na(Ozone)) |> 
+  group_by(Month) |> summarise(Wind_중간값= median(Wind, na.rm=T))
+```
+
+------------------------------------------------------------------------
+
+## 2 diamonds
+
+*diamonds* 데이터 셋
+
+![](https://www.googleapis.com/download/storage/v1/b/kaggle-user-content/o/inbox%2F3824396%2Ff6235a3402992f0fc94af9e0ca3465c2%2Finbox_3824396_4554b5824665256889dafdd5c4c59890_Bbf0GWk.jpg?generation=1588773703548655&alt=media)
+
+가격: 미국 달러 가격.
+
+캐럿: 다이아몬드의 무게.
+
+절단: 절단 품질(최악의 순서).
+
+색: 다이아몬드의 색상(가장 나쁜 순서).
+
+선명도: 다이아몬드의 선명도(최악의 순서).
+
+x: 길이(mm).
+
+y: 너비(mm).
+
+z: 깊이(mm). 깊이:
+
+총 깊이 백분율: 100 \* z / 평균(x, y)
+
+테이블: 가장 넓은 지점을 기준으로 다이아몬드 상단의 너비입니다.
+
+```{r}
+
+head(diamonds)
+
+```
+
+#### 1. 열별 영어로 된 이름을 한글로 바꾸어라.
+
+```         
+     캐럿 = carat,
+     절단 = cut,
+     색 = color,
+     선명도 =clarity,
+     깊이 = depth,
+     상단너비 = table,
+     가격 = price
+```
+
+```{r}
+#| echo: false
+
+diamonds |> 
+  rename(캐럿 = carat,
+         절단 = cut,
+         색 = color,
+         선명도 =clarity,
+         깊이 = depth,
+         상단너비 = table,
+         가격 = price)
+
+```
+
+#### 2. 가격이 평균보다 작은 다이아몬드를 clarity별로 몇개씩 있는지 구하라.
+
+```{r}
+#| echo: false
+
+diamonds |> 
+  filter(price < mean(price) ) |> 
+  group_by(clarity) |> 
+  summarise(n=n())
+
+```
+
+#### 3. 깊이백분율 열을 아래 수식에 맞도록 새로 만든 후 head()를 쓴 후 , depth와 깊이백분율 열만 보이도록 하라. 이때 깊이백분율은 소수 첫째자리까지만 보이라.
+
+**깊이백분율 =  z / (x와 y의 평균) *100 **
+
+```{r}
+#| echo: false
+
+diamonds |> 
+  mutate(깊이백분율 = round(z / ((x+y)/2)*100,1)) |> 
+
+  head() |> 
+  select(깊이백분율, depth)
+
+```
+
+#### 4. color별로 carat의 평균과 price의 중간값을 보여라. carat은 소수 둘째자리까지만 보이고, price의 내림차순으로 정렬하라. 
+
+
+```{r}
+#| echo: false
+
+diamonds |> 
+  group_by(color) |> 
+  summarise(carat평균 = round(mean(carat),2),
+            price중간값 = median(price)) |> 
+  arrange(-price중간값)
+
+```
+
+#### 5. cut이 Premium	인 것중에서 carat이  가장 큰 값을 가지는 diamond의 가격은 얼마인가?
+
+```{r}
+#| echo: false
+
+diamonds |>
+  filter(cut == "Premium") |> 
+  filter(carat == max(carat)) |> 
+  select(price) |> 
+  distinct(price)
+
+```
+
+------------------------------------------------------------------------
+
+
+
+
+## 3 Titanic
+
+*Titanic* 데이터 셋
+
+![](https://miro.medium.com/v2/resize:fit:800/1*7ae00Bjo8x3qx1YZGEIdWw.jpeg)
+```
+PassengerId: 각 승객에게 주어진 고유 ID 번호
+Survived: 승객이 생존(1)했는지 사망(0)했는지 여부
+Pclass: 승객 등급
+Name: 이름
+Sex: 승객의 성별
+Age: 승객의 나이
+SibSp: 형제자매/배우자의 수
+Parch: 부모/자녀의 수
+Ticket: 티켓 번호
+Fare: 티켓에 대해 지불한 금액
+Cabin: 객실 카테고리
+Embarked: 승객이 탑승한 항구(C = Cherbourg, Q = Queenstown, S = Southampton)
+```
+r에서는 타이타닉 데이터를 좀더 간편하게 만든 내장데이터가 있다. data를 아래와 같이 불러와서 titanic 변수에 넣고 시작하자.   
+
+titanic <- as.data.frame(Titanic)
+
+```{r}
+titanic <- as.data.frame(Titanic)
+head(titanic)
+
+```
+
+
+#### 1. 탑승자 중 여자 아이의 총 수는 몇명인가?
+
+
+```{r}
+#| echo: false
+
+titanic |> 
+  filter(Sex == "Female" & Age == "Child") |> 
+  summarise(n = sum(Freq))
+
+```
+
+#### 2. Crew중 여자 어른의 수는 몇명인가?
+
+```{r}
+#| echo: false
+
+titanic |> 
+  filter(Sex == "Female" & Class == "Crew") |> 
+  summarise(n = sum(Freq))
+
+```
+
+#### 3.Sex별, Age별 생존자가 몇명인지 보이시오. 
+
+
+```{r}
+#| echo: false
+
+titanic |> 
+  filter(Survived == "Yes") |> 
+  group_by(Sex, Age ) |> 
+  summarise(생존자 = sum(Freq))
+
+```
+
+#### 4. 위 문제에서 Sex별, Age별 생존자의 비율은 얼마인가?
+
+```{r}
+#| echo: false
+
+titanic |> 
+  group_by(Sex, Age ) |> 
+  summarise(인원수 = sum(Freq)) -> titanic1
+
+titanic |> 
+  filter(Survived == "Yes") |> 
+  group_by(Sex, Age ) |> 
+  summarise(생존자 = sum(Freq)) -> titanic2
+
+left_join(titanic1, titanic2) |> 
+  mutate(생존율 = round(생존자 / 인원수 * 100))
+
+```
+
+#### 5. Class별 생존율을 구하시오. 
+
+```{r}
+#| echo: false
+
+titanic |> 
+  group_by(Class) |> 
+  summarise(인원수 = sum(Freq)) -> titanic3
+
+titanic |> 
+  filter(Survived == "Yes") |> 
+  group_by(Class ) |> 
+  summarise(생존자 = sum(Freq)) -> titanic4
+
+left_join(titanic3, titanic4) |> 
+  mutate(생존율 = round(생존자 / 인원수 * 100))
+
+```
+
+
+------------------------------------------------------------------------
+
