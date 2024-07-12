@@ -54,7 +54,7 @@ lightbox: true
 
 Back end를 담당하는 데이터 전처리 및 시각화는 tidyverse 패키지를 이용하여 진행하고 필요할 경우, 추가 패키지를 이용할 것입니다.
 
-실전에서 바로 쓸 수 있도록 기본 예제 데이터를 이용하여 학습하고 각자 자신의 자주 사용하는 데이터를 이용하여 반복 적으로 하던 일을 코딩을 통해 줄이고 더 창의적인 일에 시간을 쓸 수 있도록 4주 과정으로 만들었습니다. (주1회 2\ ~3시간)
+실전에서 바로 쓸 수 있도록 기본 예제 데이터를 이용하여 학습하고 각자 자신의 자주 사용하는 데이터를 이용하여 반복 적으로 하던 일을 코딩을 통해 줄이고 더 창의적인 일에 시간을 쓸 수 있도록 4주 과정으로 만들었습니다. (주1회 2 \~3시간)
 
 <br/>
 
@@ -110,9 +110,7 @@ Back end를 담당하는 데이터 전처리 및 시각화는 tidyverse 패키�
 
 ![](./images/rstudio_window.png)
 
----
-
-
+------------------------------------------------------------------------
 
 ## 4 Day1
 
@@ -152,9 +150,7 @@ ex) 상용 프로그램 : 엑셀 , 미니탭, 오리진, 매트랩, 스팟파이
 
 `list`, `matrix`, `array` 형태도 있음
 
-a <- c(1,2,3,4) : 숫자형 벡터
-a <- c("1", "2", "a", "b") : 문자형 벡터
-
+a \<- c(1,2,3,4) : 숫자형 벡터 a \<- c("1", "2", "a", "b") : 문자형 벡터
 :::
 
 ::: callout-tip
@@ -170,8 +166,6 @@ a <- c("1", "2", "a", "b") : 문자형 벡터
 
 `콘솔창 지우기` : Ctrl + L
 :::
-
-
 
 <br/>
 
@@ -469,20 +463,12 @@ Data : gapminder 연도별, 나라별 기대수명, 인구수, 1인당 GDP
 6.  Kuwait 를 제외하고, 1인당 gpd 데이터를 정규화(1과 0 사이로 만듦) 하라
 :::
 
-::: {.callout-warning}
+::: callout-warning
 ## Hint
-`정규화 함수`
-nor_minmax = function(x){
-  result = (x - min(x)) / (max(x) - min(x))
-  return(result)
-}
 
-`표준화 함수`
-nor_sd = function(x){
-  result = (x - mean(x)) / sd(x)
-  return(result)
-}
+`정규화 함수` nor_minmax = function(x){ result = (x - min(x)) / (max(x) - min(x)) return(result) }
 
+`표준화 함수` nor_sd = function(x){ result = (x - mean(x)) / sd(x) return(result) }
 :::
 
 ![](images/nor_scale.png)
@@ -494,22 +480,625 @@ nor_sd = function(x){
 2.  gapminder \|\> filter(year == 2007) \|\> arrange(-pop) \|\> slice(1:10) \|\> group_by(country) \|\> summarise(인구수_억명 = round(pop/100000000,1), 기대수명_세 = round(lifeExp) ) \|\> arrange(-인구수_억명)
 3.  gapminder \|\> select(country, year, lifeExp) \|\> filter(year %in% c(1952, 2007)) \|\> pivot_wider(names_from = year, values_from = lifeExp) \|\> mutate(ratio = (`2007`- `1952`)/(2007-1952)) \|\> arrange(-ratio)
 4.  gapminder \|\> filter(year == 2002) \|\> group_by(continent) \|\> summarise(avg = mean(gdpPercap, na.rm=T), `σ`= sd(gdpPercap, na.rm=T))
-5.  
-nor_sd = function(x){
-  result = (x - mean(x)) / sd(x)
-  return(result)
-}
+5.  nor_sd = function(x){ result = (x - mean(x)) / sd(x) return(result) }
 
-gapminder |> mutate(life_nor = nor_sd(lifeExp) )
+gapminder \|\> mutate(life_nor = nor_sd(lifeExp) )
 
-6.  
-nor_minmax = function(x){
-  result = (x - min(x)) / (max(x) - min(x))
-  return(result)
-}
+6.  nor_minmax = function(x){ result = (x - min(x)) / (max(x) - min(x)) return(result) }
 
-gapminder |> 
-  
-  filter(country != "Kuwait") |> 
-  mutate(gdp_sd = nor_minmax(gdpPercap) )   
+gapminder \|\>
+
+filter(country != "Kuwait") \|\> mutate(gdp_sd = nor_minmax(gdpPercap) )
 :::
+
+------------------------------------------------------------------------
+
+## Day2 (Homework)
+
+아래는 데이터 전처리 예제입니다. 문제와 답만 있습니다. 한주 동안 풀어보시고 다음 강의 (7/13 토)에 각자 나누어서 어떻게 풀었는지 설명하는 시간을 갖도록 하겠습니다.
+
+### 1 airquality
+
+*airquality* 데이터 셋
+
+5월부터 9월까지 Ozone(오존), Solar(uv), Wind(풍속), Temp(온도)에 관한 데이터세트이다.
+
+```{r}
+library(tidyverse)
+head(airquality)
+
+```
+
+#### 1. 열별 결측치가 몇개가 있는지 표시하라.
+
+```{r}
+
+
+colSums(is.na(airquality))
+
+```
+
+#### 2. 월별 Ozone의 평균과 Wind의 표준편차를 구하시오.
+
+```{r}
+
+
+airquality |> group_by(Month) |> summarise(Ozone_평균 = mean(Ozone, na.rm=T),  Wind_표준편차 = sd(Wind, na.rm=T))
+
+```
+
+#### 3. 온도는 화씨로 되어 있는데, 섭씨 온도 Temp_C 를 새로운 열로 만들어라. 이때 소수 둘째자리에서 반올림해서 첫째자리까지 보이고 섭씨온도가 가장 높은 날은 몇월 몇일, 몇도인지 표시하라.
+
+**섭씨 = (화씨 − 32) × 5/9**
+
+```{r}
+
+
+airquality |> 
+  mutate(Temp_C = round((Temp-32)*5/9,1)) |> 
+  arrange(-Temp_C) |> 
+  slice(1) |> 
+  select(Month, Day, Temp_C)
+
+
+airquality |> 
+  filter(Temp == max(Temp)) |>
+  mutate(Temp_C = round((Temp-32)*5/9,1)) |> 
+  select(Month, Day, Temp_C)
+```
+
+#### 4. Solar.R이 150 이상인 날 중에 8월\~9월 총 몇일이나 되는가
+
+```{r}
+
+
+airquality |> 
+  filter(Solar.R >= 150) |> 
+  filter(Month %in% c(8, 9)) |> 
+  count()
+
+```
+
+#### 5. Ozone이 결측치가 있는 날 중에 월별 Wind의 세기의 중간값을 구하시오.
+
+```{r}
+
+
+airquality |> 
+  filter(is.na(Ozone)) |> 
+  group_by(Month) |> summarise(Wind_중간값= median(Wind, na.rm=T))
+```
+
+------------------------------------------------------------------------
+
+### 2 diamonds
+
+*diamonds* 데이터 셋
+
+![](https://www.googleapis.com/download/storage/v1/b/kaggle-user-content/o/inbox%2F3824396%2Ff6235a3402992f0fc94af9e0ca3465c2%2Finbox_3824396_4554b5824665256889dafdd5c4c59890_Bbf0GWk.jpg?generation=1588773703548655&alt=media)
+
+가격: 미국 달러 가격.
+
+캐럿: 다이아몬드의 무게.
+
+절단: 절단 품질(최악의 순서).
+
+색: 다이아몬드의 색상(가장 나쁜 순서).
+
+선명도: 다이아몬드의 선명도(최악의 순서).
+
+x: 길이(mm).
+
+y: 너비(mm).
+
+z: 깊이(mm). 깊이:
+
+총 깊이 백분율: 100 \* z / 평균(x, y)
+
+테이블: 가장 넓은 지점을 기준으로 다이아몬드 상단의 너비입니다.
+
+```{r}
+
+head(diamonds)
+
+```
+
+#### 1. 열별 영어로 된 이름을 한글로 바꾸어라.
+
+```         
+     캐럿 = carat,
+     절단 = cut,
+     색 = color,
+     선명도 =clarity,
+     깊이 = depth,
+     상단너비 = table,
+     가격 = price
+```
+
+```{r}
+
+
+diamonds |> 
+  rename(캐럿 = carat,
+         절단 = cut,
+         색 = color,
+         선명도 =clarity,
+         깊이 = depth,
+         상단너비 = table,
+         가격 = price)
+
+```
+
+#### 2. 가격이 평균보다 작은 다이아몬드를 clarity별로 몇개씩 있는지 구하라.
+
+```{r}
+
+
+diamonds |> 
+  filter(price < mean(price) ) |> 
+  group_by(clarity) |> 
+  summarise(n=n())
+
+```
+
+#### 3. 깊이백분율 열을 아래 수식에 맞도록 새로 만든 후 head()를 쓴 후 , depth와 깊이백분율 열만 보이도록 하라. 이때 깊이백분율은 소수 첫째자리까지만 보이라.
+
+\*\*깊이백분율 = z / (x와 y의 평균) \*100 \*\*
+
+```{r}
+
+
+diamonds |> 
+  mutate(깊이백분율 = round(z / ((x+y)/2)*100,1)) |> 
+
+  head() |> 
+  select(깊이백분율, depth)
+
+```
+
+#### 4. color별로 carat의 평균과 price의 중간값을 보여라. carat은 소수 둘째자리까지만 보이고, price의 내림차순으로 정렬하라.
+
+```{r}
+
+
+diamonds |> 
+  group_by(color) |> 
+  summarise(carat평균 = round(mean(carat),2),
+            price중간값 = median(price)) |> 
+  arrange(-price중간값)
+
+```
+
+#### 5. cut이 Premium 인 것중에서 carat이 가장 큰 값을 가지는 diamond의 가격은 얼마인가?
+
+```{r}
+
+
+diamonds |>
+  filter(cut == "Premium") |> 
+  filter(carat == max(carat)) |> 
+  select(price) |> 
+  distinct(price)
+
+```
+
+------------------------------------------------------------------------
+
+### 3 Titanic
+
+*Titanic* 데이터 셋
+
+![](https://miro.medium.com/v2/resize:fit:800/1*7ae00Bjo8x3qx1YZGEIdWw.jpeg)
+
+```         
+PassengerId: 각 승객에게 주어진 고유 ID 번호
+Survived: 승객이 생존(1)했는지 사망(0)했는지 여부
+Pclass: 승객 등급
+Name: 이름
+Sex: 승객의 성별
+Age: 승객의 나이
+SibSp: 형제자매/배우자의 수
+Parch: 부모/자녀의 수
+Ticket: 티켓 번호
+Fare: 티켓에 대해 지불한 금액
+Cabin: 객실 카테고리
+Embarked: 승객이 탑승한 항구(C = Cherbourg, Q = Queenstown, S = Southampton)
+```
+
+r에서는 타이타닉 데이터를 좀더 간편하게 만든 내장데이터가 있다. data를 아래와 같이 불러와서 titanic 변수에 넣고 시작하자.
+
+titanic \<- as.data.frame(Titanic)
+
+```{r}
+titanic <- as.data.frame(Titanic)
+head(titanic)
+
+```
+
+#### 1. 탑승자 중 여자 아이의 총 수는 몇명인가?
+
+```{r}
+
+
+titanic |> 
+  filter(Sex == "Female" & Age == "Child") |> 
+  summarise(n = sum(Freq))
+
+```
+
+#### 2. Crew중 여자 어른의 수는 몇명인가?
+
+```{r}
+
+
+titanic |> 
+  filter(Sex == "Female" & Class == "Crew") |> 
+  summarise(n = sum(Freq))
+
+```
+
+#### 3.Sex별, Age별 생존자가 몇명인지 보이시오.
+
+```{r}
+
+
+titanic |> 
+  filter(Survived == "Yes") |> 
+  group_by(Sex, Age ) |> 
+  summarise(생존자 = sum(Freq))
+
+```
+
+#### 4. 위 문제에서 Sex별, Age별 생존자의 비율은 얼마인가?
+
+```{r}
+
+
+titanic |> 
+  group_by(Sex, Age ) |> 
+  summarise(인원수 = sum(Freq)) -> titanic1
+
+titanic |> 
+  filter(Survived == "Yes") |> 
+  group_by(Sex, Age ) |> 
+  summarise(생존자 = sum(Freq)) -> titanic2
+
+left_join(titanic1, titanic2) |> 
+  mutate(생존율 = round(생존자 / 인원수 * 100))
+
+```
+
+#### 5. Class별 생존율을 구하시오.
+
+```{r}
+
+
+titanic |> 
+  group_by(Class) |> 
+  summarise(인원수 = sum(Freq)) -> titanic3
+
+titanic |> 
+  filter(Survived == "Yes") |> 
+  group_by(Class ) |> 
+  summarise(생존자 = sum(Freq)) -> titanic4
+
+left_join(titanic3, titanic4) |> 
+  mutate(생존율 = round(생존자 / 인원수 * 100))
+
+```
+
+------------------------------------------------------------------------
+
+<hr/>
+
+<hr/>
+
+### 4 [날짜 다루기]{style="color:blue;"}
+
+To learn more about **lubridate** see <https://lubridate.tidyverse.org/>.
+
+-   패키지 설치, 불러오기
+
+```{r}
+#| echo = T
+
+#install.packages('lubridate')
+library('lubridate')
+```
+
+-   문자로 표현된 날짜를 날짜변수로 바꾸기
+
+```{r}
+#| echo = T
+
+date <- '2020-01-10'
+class(date)
+date2 <- as.Date(date)
+class(date2)
+
+```
+
+-   연, 월, 일 뽑아내기
+
+```{r}
+#| echo = T
+
+year(date)
+month(date)
+day(date)
+ymd(date)
+
+```
+
+-   주, 요일 뽑아내기
+
+```{r}
+#| echo = T
+week(date)
+wday(date)
+wday(date, label = T)
+
+```
+
+-   시간, 분, 초 뽑아내기
+
+```{r}
+#| echo = T
+now()
+time <- now()
+hour(time)
+minute(time)
+second(time)
+ymd_hms(time)
+```
+
+------------------------------------------------------------------------
+
+## 
+
+### 5 [강수량 분석]{style="color:blue;"}
+
+*\[출처\] 1주차 예상문제 (실기1 유형) (이기적 스터디 카페)*
+
+dataurl = https://raw.githubusercontent.com/Datamanim/datarepo/main/weather/weather2.csv
+
+-   패키지로드, 데이터 불러오기
+
+```{r}
+#| echo = T
+library(tidyverse)
+
+df<-read.csv("https://raw.githubusercontent.com/Datamanim/datarepo/main/weather/weather2.csv")
+
+```
+
+------------------------------------------------------------------------
+
+-   [Q1. 여름철(6월,7월,8월) 이화동이 수영동보다 높은 기온을 가진 시간대는 몇개인가?]{style="color:red;"}
+
+```{r}
+
+#Q1
+
+library(lubridate)
+
+df |> 
+  mutate(월 = month(time),
+         시간 = hour(time)) |> 
+  filter(월 %in% c(6,7,8),
+         이화동기온 > 수영동기온) |> 
+  nrow()
+
+```
+
+-   [Q2. 이화동과 수영동의 최대강수량의 시간대를 각각 구하여라]{style="color:red;"}
+
+```{r}
+
+#Q2
+
+df |> 
+  filter(이화동강수 == max(이화동강수 ) ) |> 
+  select(time)
+
+df |> 
+  filter(수영동강수 == max(수영동강수)) |> 
+  select(time)
+
+```
+
+------------------------------------------------------------------------
+
+## 데이터불러오기
+
+To learn more about **tidyr** see <https://tidyr.tidyverse.org/reference/pivot_longer.html/>.
+
+데이터 분석의 첫 걸음은 데이터를 불러오는 과정이다.
+
+1.  R의 내장 데이터에서 불러오기
+
+    data() , help("AirPassengers")
+
+<https://vincentarelbundock.github.io/Rdatasets/datasets.html>
+
+```{r}
+
+data(AirPassengers)
+AirPassengers
+
+plot(AirPassengers, main = "Airline Passengers Over Time",
+     xlab = "Year-Month", ylab = "Number of Passengers")
+
+```
+
+2.  외장데이터 불러오기 (package 설치, library로 불러오기)
+
+    gapminder : 세계 여러 국가의 인구, 경제, 건강 등의 데이터를 포함
+
+```{r}
+
+#install.packages("gapminder")
+library(gapminder)
+
+data(gapminder)
+head(gapminder)
+```
+
+3.  클릭보드(엑셀)에서 붙여넣기
+
+    datapaste 패키지 설치 -\> 엑셀에서 ctrl+c -\> RStudio의 Addins에서 Paste as tribble
+
+<!-- -->
+
+4.  csv 파일에서 불러오기
+
+```{r}
+
+#| eval: true
+
+ #  read.csv ("D:/r/data/test.csv")       ## **/** 방향 주의
+ #  read.csv ("D:\\r\\data\\test.csv")    ## **\\** 방향 주의
+   
+```
+
+5.  엑셀파일 불러오기 <https://readxl.tidyverse.org/>
+
+```{r}
+
+#| eval: true
+
+#   install.packages('readxl')
+#   library(readxl)
+#   read_excel("my_file.xls")
+   
+```
+
+6.  구글시트에서 불러오기
+
+\[참고\] <https://googlesheets4.tidyverse.org/>
+
+```{r}
+
+#install.packages("googlesheets4")
+library(googlesheets4)
+gs4_deauth()
+
+df <- read_sheet("https://docs.google.com/spreadsheets/d/1V1nPp1tzOuutXFLb3G9Eyxi3qxeEhnOXUzL5_BcCQ0w/edit?gid=0#gid=0")
+
+head(df)
+```
+
+7.  NA 처리하기 <https://tidyr.tidyverse.org/reference/fill.html>
+
+```{r}
+sales <- tibble::tribble(
+  ~quarter, ~year, ~sales,
+  "Q1",    2000,    66013,
+  "Q2",      NA,    69182,
+  "Q3",      NA,    53175,
+  "Q4",      NA,    21001,
+  "Q1",    2001,    46036,
+  "Q2",      NA,    58842,
+  "Q3",      NA,    44568,
+  "Q4",      NA,    50197,
+  "Q1",    2002,    39113,
+  "Q2",      NA,    41668,
+  "Q3",      NA,    30144,
+  "Q4",      NA,    52897,
+  "Q1",    2004,    32129,
+  "Q2",      NA,    67686,
+  "Q3",      NA,    31768,
+  "Q4",      NA,    49094
+)
+
+
+# `fill()` defaults to replacing missing data from top to bottom
+sales %>% fill(year, .direction = "down")
+```
+
+8.  NA를 평균, 중앙값으로 대체하기
+
+```{r}
+head(airquality)
+colSums(is.na(airquality))
+
+airquality |> 
+  mutate(Ozone = ifelse(is.na(Ozone), mean(Ozone, na.rm=T), Ozone),
+         Solar.R = ifelse(is.na(Ozone), median(Ozone, na.rm=T), Solar.R)) -> airquality2
+
+colSums(is.na(airquality2))
+
+
+```
+
+## 시각화 하기
+
+\[ggplot 갤러리\] [The R Graph Gallery – Help and inspiration for R charts (r-graph-gallery.com)](https://r-graph-gallery.com/)
+
+\[한국 R 사용자회 – 챗GPT 데이터 시각화 (r2bit.com)\] <https://r2bit.com/bitSlide/chatgpt_viz_202406.html#/데이터-시각화>
+
+\[참고 자료\] <https://waterfirst.quarto.pub/r_course/#/title-slide>
+
+\[참고 자료\] <https://rstudio.github.io/cheatsheets/html/data-visualization.html>
+
+ChickWeight 데이터셋:
+
+weight: 닭의 체중 Time: 실험 시간 Chick: 닭의 고유 식별자 Diet: 실험 그룹을 나타내는 범주형 변수로, 각 닭이 어떤 종류의 식사를 받았는지를 나타냅니다.
+
+```{r}
+head(ChickWeight)
+
+ChickWeight |> ggplot(aes(Time, weight, col=Chick, fill=Diet))+geom_point()+
+  geom_line()+
+  facet_wrap(~Diet,)+
+  theme(legend.position = "none")
+```
+
+#### 1. 산점도 그래프
+
+\[참고자료\]<https://ggplot2.tidyverse.org/index.html>
+
+```{r}
+library(tidyverse)
+
+ggplot(mpg, aes(cty, hwy)) +
+  geom_point(mapping = aes(colour = displ)) +
+  geom_smooth(formula = y ~ x, method = "lm") +
+  scale_colour_viridis_c() +
+  facet_grid(year ~ drv) +
+  coord_fixed() +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank())
+
+
+```
+
+#### 2. Color 팔레트
+
+```{r}
+library(RColorBrewer)
+display.brewer.all()
+```
+
+사용법 :
+
+scale_fill_brewer(palette="Set1")
+
+scale_colour_brewer(palette="Set1")
+
+\[Color Pick Up\](<https://r-graph-gallery.com/ggplot2-color.html>)
+
+\[Colorspace 패키지\](<https://m.blog.naver.com/regenesis90/222234511150>)
+
+\[Sci-Fi\](<https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html>)
+
+#### 3. Boxplot 그래프
+
+\[참고자료\]<https://ggplot2.tidyverse.org/reference/geom_boxplot.html>
+
+```{r}
+
+
+ggplot(mpg, aes(class, hwy)) + geom_boxplot(aes(colour = drv))
+
+```
