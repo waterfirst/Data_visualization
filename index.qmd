@@ -1041,39 +1041,113 @@ colSums(is.na(airquality2))
 
 \[참고 자료\] <https://rstudio.github.io/cheatsheets/html/data-visualization.html>
 
-ChickWeight 데이터셋:
 
-weight: 닭의 체중 Time: 실험 시간 Chick: 닭의 고유 식별자 Diet: 실험 그룹을 나타내는 범주형 변수로, 각 닭이 어떤 종류의 식사를 받았는지를 나타냅니다.
 
 ```{r}
-head(ChickWeight)
-
-ChickWeight |> ggplot(aes(Time, weight, col=Chick, fill=Diet))+geom_point()+
-  geom_line()+
-  facet_wrap(~Diet,)+
-  theme(legend.position = "none")
+df <- tibble::tribble(
+  ~angle,  ~`4.3`,  ~`3.8`,  ~`3.3`,  ~`2.8`,  ~`2.3`,  ~`1.8`,  ~`1.3`,
+      0L,   0.999,   0.999,       1,       1,       1,       1,       1,
+      5L,       1,       1,   0.999,   0.988,   0.963,   0.923,    0.88,
+     10L,    0.91,   0.866,   0.821,   0.774,    0.73,   0.685,    0.64,
+     15L,   0.668,   0.621,   0.577,   0.533,    0.49,   0.449,   0.407,
+     20L,   0.424,   0.382,   0.339,   0.294,   0.252,   0.207,   0.162,
+     25L,   0.182,   0.139,   0.096,   0.056,   0.028,   0.014,   0.011,
+     30L,   0.011,    0.01,    0.01,   0.009,   0.009,    0.01,   0.009,
+     35L,   0.008,   0.008,   0.008,   0.008,   0.008,   0.008,   0.008,
+     40L,   0.007,   0.007,   0.007,   0.007,   0.007,   0.007,   0.007,
+     45L,   0.006,   0.006,   0.005,   0.006,   0.005,   0.003,   0.002,
+     50L,   0.005,   0.005,   0.004,   0.003,   0.002,   0.001,   0.001,
+     55L,   0.006,   0.003,   0.002,   0.001,   0.001,   0.001,       0,
+     60L,   0.005,   0.002,   0.001,   0.001,   0.001,       0,       0,
+     65L,   0.004,   0.003,   0.001,   0.001,       0,       0,       0,
+     70L,   0.003,   0.002,   0.002,       0,       0,       0,       0
+  )
+head(df)
 ```
 
-#### 1. 산점도 그래프
 
-\[참고자료\]<https://ggplot2.tidyverse.org/index.html>
+#### 1. 산점도 그래프
 
 ```{r}
 library(tidyverse)
 
-ggplot(mpg, aes(cty, hwy)) +
-  geom_point(mapping = aes(colour = displ)) +
-  geom_smooth(formula = y ~ x, method = "lm") +
-  scale_colour_viridis_c() +
-  facet_grid(year ~ drv) +
-  coord_fixed() +
-  theme_minimal() +
-  theme(panel.grid.minor = element_blank())
+df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>% 
+  
+  ggplot(aes(x=angle, y=value, col=space))+
+  geom_point()+
+  geom_smooth(se=F, method = "gam")+
+  theme_bw()
+```
 
+```{r}
+df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>% 
+  
+  ggplot(aes(x=angle, y=value, col=space))+
+  geom_point()+
+  geom_smooth(se=F, method = "gam")+
+  theme_bw()+
+  facet_wrap(~space, labeller = label_both)
+```
+#### 2. 막대 그래프
+```{r}
+df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%  
+  mutate(space = as.numeric(space)) %>% 
+  filter(angle %in% c(0, 10, 15)) %>% 
+  mutate(angle = as.factor(angle)) %>% 
+  ggplot(aes(x=space, y=value*100, label=value*100, fill=angle))+
+  geom_col(position="dodge")+
+  
+  geom_text(aes(label = value*100, y=value*100+3), position = position_dodge(0.5))+
+  theme_bw()+
+  labs(y="normalized value(%)", x="space 이격거리")
+```
+
+```{r}
+df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%  
+  mutate(space = as.numeric(space)) %>% 
+  filter(angle %in% c(0, 10, 15)) %>% 
+  mutate(angle = as.factor(angle)) %>% 
+  ggplot(aes(x=space, y=value*100, label=value*100, fill=angle))+
+  geom_col(position="dodge")+
+  geom_label(position= position_dodge(0.4))+
+  theme_bw()+
+  labs(y="normalized value(%)", x="space 이격거리")
+```
+```{r}
+df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%  
+  mutate(space = as.factor(space)) %>% 
+  filter(angle >45) %>% 
+  ggplot(aes(x=space, y=value*100,  fill=space))+
+  geom_boxplot()+
+  theme_bw()+
+  labs(y="normalized value(%)", x="space 이격거리")
+```
+- 평균값 넣기
+
+```{r}
+
+p <- df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%  
+  mutate(space = as.factor(space)) %>% 
+  filter(angle <25) %>% 
+  ggplot(aes(x=space, y=value*100,  fill=space))+
+  geom_boxplot()+
+  theme_bw()+
+  labs(y="normalized value(%)", x="space 이격거리")
+
+fun_mean <- function(x){
+  return(data.frame(y=mean(x),label=round(mean(x,na.rm=T),1)))}
+
+p+
+  stat_summary(fun.data = fun_mean, geom="text", vjust=-0.7, position=position_dodge(0.8))+
+  stat_summary(fun.y = mean, geom="point", size=1)
 
 ```
 
-#### 2. Color 팔레트
+
+\[참고자료\]<https://ggplot2.tidyverse.org/reference/geom_boxplot.html>
+
+
+#### 4. Color 팔레트
 
 ```{r}
 library(RColorBrewer)
@@ -1092,13 +1166,7 @@ scale_colour_brewer(palette="Set1")
 
 \[Sci-Fi\](<https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html>)
 
-#### 3. Boxplot 그래프
 
-\[참고자료\]<https://ggplot2.tidyverse.org/reference/geom_boxplot.html>
+#### 5. 테마 
 
-```{r}
-
-
-ggplot(mpg, aes(class, hwy)) + geom_boxplot(aes(colour = drv))
-
-```
+\[theme\](<https://ggplot2.tidyverse.org/reference/ggtheme.html>)
