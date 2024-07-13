@@ -1170,3 +1170,152 @@ scale_colour_brewer(palette="Set1")
 #### 5. 테마 
 
 \[theme\](<https://ggplot2.tidyverse.org/reference/ggtheme.html>)
+
+## 표로 데이터 보여주기
+
+
+### gt 패키지 이용하기
+
+
+- [gt package]<https://gt.rstudio.com/articles/gt.html>
+
+1) 간단한 테이블 만들어보기 (나라별 섬 갯수)
+
+```{r}
+library(tidyverse)
+library(gt)
+
+df <- tibble(
+    name = names(islands),
+    size = islands
+  ) 
+
+df |> 
+  arrange(-size)|>
+  slice(1:10) |> 
+  gt()
+```
+
+
+![](https://gt.rstudio.com/reference/figures/gt_parts_of_a_table.svg){width="719"}
+2) Title, subtitle 넣기
+
+```{r}
+
+df |> 
+  arrange(-size)|>
+  slice(1:10) |> 
+  gt() |> 
+    tab_header(
+    title = "Large Landmasses of the World",
+    subtitle = "The top ten largest are presented"
+  )
+```
+3) 제목 꾸미기 (마크다운 문법 md)
+
+```{r}
+df |> 
+  arrange(-size)|>
+  slice(1:2) |> 
+  gt() |> 
+  tab_header(
+    title = md("**Large Landmasses of the World**"),
+    subtitle = md("The *top two* largest are presented")
+  )
+```
+4) 바닥글에 출처 넣기(tab_source_note)
+```{r}
+df |> 
+  arrange(-size)|>
+  slice(1:10) |> 
+  gt() |> 
+  tab_header(
+    title = md("**Large Landmasses of the World**"),
+    subtitle = md("The *top two* largest are presented")
+  ) |> 
+    tab_source_note(
+    source_note = "Source: The World Almanac and Book of Facts, 1975, page 406."
+  ) |>
+  tab_source_note(
+    source_note = md("Reference: McNeil, D. R. (1977) *Interactive Data Analysis*. Wiley.")
+  )
+```
+5) 주석 넣기(tab_footnote)
+
+```{r}
+df |> 
+  arrange(-size)|>
+  slice(1:10) |> 
+  gt() |> 
+  tab_header(
+    title = md("**Large Landmasses of the World**"),
+    subtitle = md("The *top two* largest are presented")
+  ) |> 
+    tab_source_note(
+    source_note = "Source: The World Almanac and Book of Facts, 1975, page 406."
+  ) |>
+  tab_source_note(
+    source_note = md("Reference: McNeil, D. R. (1977) *Interactive Data Analysis*. Wiley.")
+  ) |> 
+  
+    tab_footnote(
+    footnote = "The Americas.",
+    locations = cells_body(columns = name, rows = 3:4)
+  ) |> 
+  
+  tab_footnote(
+    footnote = "The largest by area.",
+    locations = cells_body(
+      columns = size,
+      rows = size == max(size)
+    )
+  ) |>
+  tab_footnote(
+    footnote = "The lowest by area.",
+    locations = cells_body(
+      columns = size,
+      rows = size == min(size)
+    )
+  )
+```
+6) table 저장하기
+```{r}
+df |> 
+  arrange(-size)|>
+  slice(1:10) |> 
+  gt() |> 
+  tab_header(
+    title = md("**Large Landmasses of the World**"),
+    subtitle = md("The *top two* largest are presented")
+  ) |> 
+    tab_source_note(
+    source_note = "Source: The World Almanac and Book of Facts, 1975, page 406."
+  ) |>
+  tab_source_note(
+    source_note = md("Reference: McNeil, D. R. (1977) *Interactive Data Analysis*. Wiley.")
+  ) |> 
+  
+    tab_footnote(
+    footnote = "The Americas.",
+    locations = cells_body(columns = name, rows = 3:4)
+  ) |> 
+  
+  tab_footnote(
+    footnote = "The largest by area.",
+    locations = cells_body(
+      columns = size,
+      rows = size == max(size)
+    )
+  ) |>
+  tab_footnote(
+    footnote = "The lowest by area.",
+    locations = cells_body(
+      columns = size,
+      rows = size == min(size)
+    )
+  ) |> 
+  #  gtsave(filename = "tab_1.html") |> 
+  gtsave("tab_1.png", expand = 10)
+```
+
+
