@@ -1,0 +1,50 @@
+---
+title: "R을 이용한 데이터 전처리 숙제 2"
+author: "waterfirst"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    link-external-icon: true
+    link-external-newwindow: true
+    link-external-filter: '^(?:http:|https:)\/\/www\.quarto\.org\/custom'
+editor: visual
+code-fold: false
+Rendering:
+  embed-resources: true
+execute:
+  message : false
+  warning : false
+  error : false
+  echo : true
+lightbox: true
+---
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz-gTT8aJH9wBSKM0Kw24swq5v9wNqEauhWlRcuQchnHBGWN8_Kc09gYSKp1H_dQpnt_0&usqp=CAU)
+
+아래는 데이터 시각화 문제입니다.
+
+## 1 Photo 공정 데이터
+
+다음은 포토 공정을 통해 PDL 이란 유기막 공정 진행 후 CD를 측정한 값이다.
+
+OLED의 개구부를 형성하는 유기막 재료개발을 하려고 2종의 재료를 코팅 두께, 노광량, 현상 시간을 조절하여 Target CD 40을 만족하는 최적 조건을 찾으려고 한다.
+
+target CD를 만족하면서 공정 산포가 최소가 되는 재료와 공정 조건을 R을 통해 찾으시오
+
+1.  전처리를 통해 두 재료의 공정조건별 CD 평균, 표준편차를 구하시오
+2.  Boxplot을 통해 데이터를 시각화 하시오
+
+![](images/PDL.png)
+
+![](images/photo.png)
+
+데이터셋 :
+
+```{r}
+library(tidyverse)
+cd <- read.csv("./data/cd.csv")
+head(cd)
+
+```
+
