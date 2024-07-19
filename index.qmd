@@ -1171,6 +1171,617 @@ scale_colour_brewer(palette="Set1")
 
 \[theme\](<https://ggplot2.tidyverse.org/reference/ggtheme.html>)
 
+## Day3 (Homework)
+
+
+#### viloin 그래프
+
+\[참고자료\]<https://r-charts.com/es/distribucion/grafico-violin-grupo-ggplot2/>
+
+```{r}
+
+
+# install.packages("ggplot2")
+library(tidyverse)
+head(warpbreaks)
+str(warpbreaks)
+summary(warpbreaks)
+
+warpbreaks |> ggplot(aes(x = tension, y = breaks, fill = tension)) +
+  geom_violin(trim = F) +
+  geom_boxplot(width = 0.07) 
+
+
+```
+
+
+
+#### Density 그래프
+
+\[참고자료\]<https://r-charts.com/es/distribucion/grafico-densidad-grupo-ggplot2/>
+
+```{r}
+
+# Datos
+set.seed(5)
+x <- c(rnorm(200, mean = -2, 1.5),
+       rnorm(200, mean = 0, sd = 1),
+       rnorm(200, mean = 2, 1.5))
+group <- c(rep("A", 200), rep("B", 200), rep("C", 200))
+df <- data.frame(x, group)
+
+head(df)
+
+# install.packages("ggplot2")
+library(ggplot2)
+
+cols <- c("#F76D5E", "#FFFFBF", "#72D8FF")
+
+# Gráfico de densidad en ggplot2
+df |> ggplot(aes(x = x, fill = group)) +
+  geom_density(alpha = 0.7) + 
+  scale_fill_manual(values = cols) 
+ 
+
+```
+#### boxplot+density+point
+
+\[참고자료\]<https://mjskay.github.io/ggdist/>
+
+```{r}
+
+library(ggdist)
+library(tidyverse)
+library(tidyquant)
+
+head(mpg)
+
+mpg %>% 
+  filter(cyl %in% c(4,6,8)) %>% 
+  ggplot(aes(x=factor(cyl), y=hwy, fill=factor(cyl)))+
+  ggdist::stat_halfeye(
+    adjust=0.5,
+    justification= -.2,
+    .width = 0,
+    width=0.4,
+    point_colour=NA
+  )+
+  ggdist::stat_dots(
+    side="left",
+    justification = 1.1,
+    binwidth = .25
+  )+
+  scale_fill_tq()+
+  theme_tq()+
+  labs(title="Raincloud Plot",
+       subtitle = "showing the bi-modal distribution of 6 cylinder vehicle",
+       x="engine size",
+       y="highway fuel economy",
+       fill= "cylinders")+
+  #coord_flip()+
+  geom_boxplot(
+    width=.12,
+    outlier.color = NA,
+    alpha=0.5
+  )
+
+```
+
+
+
+
+#### Pair 그래프
+
+\[참고자료\]<https://r-charts.com/es/correlacion/ggpairs/>
+
+```{r}
+
+# install.packages("GGally")
+library(GGally)
+
+ggpairs(iris)  
+
+# install.packages("GGally")
+library(GGally)
+
+ggpairs(iris, columns = 1:4, aes(color = Species, alpha = 0.5),
+        upper = list(continuous = "points")) 
+
+
+```
+
+#### Sankey 그래프
+
+\[참고자료\]<https://r-charts.com/es/flujo/diagrama-sankey-ggplot2/>
+
+```{r}
+
+# install.packages("remotes")
+# remotes::install_github("davidsjoberg/ggsankey")
+
+library(ggsankey)
+df <- mtcars %>%
+  make_long(cyl, vs, am, gear, carb) 
+
+# install.packages("remotes")
+# remotes::install_github("davidsjoberg/ggsankey")
+library(ggsankey)
+# install.packages("ggplot2")
+library(ggplot2)
+# install.packages("dplyr")
+library(dplyr) # Necesario
+
+ggplot(df, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node),
+               label = node)) +
+  geom_sankey(flow.alpha = 0.5, node.color = 1) +
+  geom_sankey_label(size = 3.5, color = 1, fill = "white") +
+  scale_fill_viridis_d() +
+  theme_sankey(base_size = 16) +
+  theme(legend.position = "none") 
+
+```
+
+#### 그래프 분할하기
+
+-   facet_grid
+
+```{r}
+#create data frame
+df <- data.frame(team=c('A', 'A', 'A', 'A', 'B', 'B', 'B', 'B'),
+                 position=c('G', 'G', 'F', 'F', 'G', 'G', 'G', 'G'),
+                 points=c(8, 14, 20, 22, 25, 29, 30, 31),
+                 assists=c(10, 5, 5, 3, 8, 6, 9, 12))
+
+ggplot(df, aes(assists, points)) +
+  geom_point() +
+  facet_grid(position~team)
+
+```
+
+-   facet_warp
+
+```{r}
+ggplot(df, aes(assists, points)) +
+  geom_point() +
+  facet_wrap(position~team)
+```
+
+#### Patchwork 패키지
+
+```{r}
+library(patchwork)
+
+p1 <- ggplot(mtcars) + geom_point(aes(mpg, disp))
+p2 <- ggplot(mtcars) + geom_boxplot(aes(gear, disp, group = gear))
+
+p1 + p2
+```
+
+```{r}
+p3 <- ggplot(mtcars) + geom_smooth(aes(disp, qsec))
+p4 <- ggplot(mtcars) + geom_bar(aes(carb))
+
+(p1 | p2 | p3) /
+      p4
+```
+
+#### 논문용 Theme
+
+```{r}
+theme_Publication <- function(base_size=14, base_family="helvetica") {
+  library(grid)
+  library(ggthemes)
+  (theme_foundation(base_size=base_size, base_family=base_family)
+    + theme(plot.title = element_text(face = "bold",
+                                      size = rel(1.2), hjust = 0.5),
+            text = element_text(),
+            panel.background = element_rect(colour = NA),
+            plot.background = element_rect(colour = NA),
+            panel.border = element_rect(colour = NA),
+            axis.title = element_text(face = "bold",size = rel(1)),
+            axis.title.y = element_text(angle=90,vjust =2),
+            axis.title.x = element_text(vjust = -0.2),
+            axis.text = element_text(), 
+            axis.line = element_line(colour="black"),
+            axis.ticks = element_line(),
+            panel.grid.major = element_line(colour="#f0f0f0"),
+            panel.grid.minor = element_blank(),
+            legend.key = element_rect(colour = NA),
+            legend.position = "bottom",
+            legend.direction = "horizontal",
+            legend.key.size= unit(0.2, "cm"),
+            legend.margin = unit(0, "cm"),
+            legend.title = element_text(face="italic"),
+            plot.margin=unit(c(10,5,5,5),"mm"),
+            strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
+            strip.text = element_text(face="bold")
+    ))
+  
+}
+
+scale_fill_Publication <- function(...){
+  library(scales)
+  discrete_scale("fill","Publication",manual_pal(values = c("#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")), ...)
+  
+}
+
+scale_colour_Publication <- function(...){
+  library(scales)
+  discrete_scale("colour","Publication",manual_pal(values = c("#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")), ...)
+  
+}
+
+```
+
+#### Plotly 그래프
+
+```{r}
+
+
+library(ggrepel)
+
+
+temp.dat <- structure(list(Year = c("2003", "2004", "2005", "2006", "2007", 
+                                    "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2003", 
+                                    "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", 
+                                    "2012", "2013", "2014", "2003", "2004", "2005", "2006", "2007", 
+                                    "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2003", 
+                                    "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", 
+                                    "2012", "2013", "2014"), State = structure(c(1L, 1L, 1L, 1L, 
+                                                                                 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+                                                                                 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 
+                                                                                 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L), .Label = c("VIC", 
+                                                                                                                                             "NSW", "QLD", "WA"), class = "factor"), Capex = c(5.35641472365348, 
+                                                                                                                                                                                               5.76523240652641, 5.24727577535625, 5.57988239709746, 5.14246402568366, 
+                                                                                                                                                                                               4.96786288162828, 5.493190785287, 6.08500616799372, 6.5092228474591, 
+                                                                                                                                                                                               7.03813541623157, 8.34736513875897, 9.04992300432169, 7.15830329914056, 
+                                                                                                                                                                                               7.21247045701994, 7.81373928617117, 7.76610217197542, 7.9744994967006, 
+                                                                                                                                                                                               7.93734452080786, 8.29289899132255, 7.85222269563982, 8.12683746325074, 
+                                                                                                                                                                                               8.61903784301649, 9.7904327253813, 9.75021175267288, 8.2950673974226, 
+                                                                                                                                                                                               6.6272705639724, 6.50170524635367, 6.15609626379471, 6.43799637295979, 
+                                                                                                                                                                                               6.9869551384028, 8.36305663640294, 8.31382617231745, 8.65409824343971, 
+                                                                                                                                                                                               9.70529678167458, 11.3102788081848, 11.8696420977237, 6.77937303542605, 
+                                                                                                                                                                                               5.51242844820827, 5.35789621712839, 4.38699327451101, 4.4925792218211, 
+                                                                                                                                                                                               4.29934654081527, 4.54639175257732, 4.70040615159951, 5.04056109514957, 
+                                                                                                                                                                                               5.49921208937735, 5.96590909090909, 6.18700407463007)), class = "data.frame", row.names = c(NA, 
+                                                                                                                                                                                                                                                                                           -48L), .Names = c("Year", "State", "Capex"))
+
+
+head(temp.dat)
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+
+
+p <- temp.dat %>%
+  mutate(label = if_else(Year == max(Year), as.character(State), NA_character_)) %>%
+  ggplot(aes(x = Year, y = Capex, group = State, colour = State, shape=State)) + 
+  geom_line() + geom_point()+
+  geom_label_repel(aes(label = label),
+                   nudge_x = 1,
+                   na.rm = TRUE)+
+  scale_colour_Publication()+ theme_Publication()+
+  theme(legend.position = "none")
+p
+
+library(plotly)
+ggplotly(p)
+```
+
+#### 그래프 저장
+
+```{r}
+p
+ggsave("myplot.png")
+
+p2 <- ggplotly(p)
+htmlwidgets::saveWidget(p2, "myplot.html")
+```
+
+#### 실전 팁
+
+::: {.callout-note}
+xyz 로 이루어진 데이터이미지화 하기기
+주로 `gradual map` 이미지로 표현
+:::
+
+```{r}
+
+df <- read.csv("https://raw.githubusercontent.com/waterfirst/Data_visualization/main/xyz.csv", sep="\t")
+
+
+head(df)
+```
+```{r}
+df |>   pivot_longer(cols = 1:40, names_to = "x", values_to = "z") %>%
+  mutate(y= rep(seq(1:40), 30),  x= rep(seq(1:30), each=40), z=(z-min(z))/10000) -> df1
+```
+
+
+```{r}
+df1 %>% ggplot(aes(x=x, y=y, fill=z))+geom_tile()+
+  scale_fill_gradientn(colours=c("navy","blue", "green", "yellow", "orange", "red"))+
+  labs(x="x", y="y", title=paste("3D Profile by WSI")) +
+  theme_bw() + theme(axis.text.x=element_text(size=9, angle=0, vjust=0.3),
+                     axis.text.y=element_text(size=9),
+                     plot.title=element_text(size=11))
+```
+
+```{r}
+df1 |>  ggplot(aes(x=x, y=y, fill=z)) +
+  geom_raster()+
+    scale_fill_viridis_c()
+```
+
+
+
+```{r}
+
+require(akima)
+require(rgl)
+
+
+filled.contour(x=c(1:nrow(df)),
+               y=c(1:ncol(df)),
+               z=as.matrix(df),
+               color.palette=colorRampPalette(c("blue","yellow","red")),
+               plot.title=title(main="mm" ,
+                                sub= ""  ,
+                                xlab="", ylab=""),
+               nlevels=50,
+               plot.axes = { axis(side = 2, at = nrow(df), labels = "", col.lab="white")
+                 axis(side = 1, at = ncol(df), labels = ncol(df), col.lab="white") },
+               key.title=title(main="T(%)"),
+               key.axes = axis(4, seq(0, 8, by = 0.1))) 
+
+```
+#### 3d grahp
+<https://www.rayshader.com/reference/plot_gg.html>
+
+
+```{r}
+library(rayshader)
+mtplot_density = ggplot(mtcars) + 
+ stat_density_2d(aes(x=mpg,y=disp, fill=after_stat(!!str2lang("density"))), 
+                 geom = "raster", contour = FALSE) +
+ scale_x_continuous(expand=c(0,0)) +
+ scale_y_continuous(expand=c(0,0)) +
+ scale_fill_gradient(low="pink", high="red")
+mtplot_density
+
+```
+
+```{r}
+plot_gg(mtplot_density, width = 4,zoom = 0.60, theta = -45, phi = 30, 
+       windowsize = c(1400,866))
+render_snapshot()
+```
+
+#### Polar contour graph
+
+```{r}
+
+df <- read.csv("./data/polar_data.csv")
+head(df)
+
+
+```
+```{r}
+
+library(tidyverse)
+
+library(stringr)
+library(akima)
+library(showtext) # 한글
+library(viridis) #특정 color 묶음
+library(patchwork)
+showtext_auto()
+
+df |>   pivot_longer(-1, names_to = "Phi", values_to = "L", names_prefix = "X") |> mutate(Phi = as.numeric(Phi)) -> df1
+
+
+PolarImagePlot <- function(Mat, outer.radius = 1, ppa = 5, cols, breaks, nbreaks = 51, axes = TRUE, circle.rads){
+
+  # the image prep
+  Mat      <- Mat[, ncol(Mat):1]
+  radii    <- ((0:ncol(Mat)) / ncol(Mat)) * outer.radius
+
+  # 5 points per arc will usually do
+  Npts     <- ppa
+  # all the angles for which a vertex is needed
+  radians  <- 2 * pi * (0:(nrow(Mat) * Npts)) / (nrow(Mat) * Npts) + pi / 2
+  # matrix where each row is the arc corresponding to a cell
+  rad.mat  <- matrix(radians[-length(radians)], ncol = Npts, byrow = TRUE)[1:nrow(Mat), ]
+  rad.mat  <- cbind(rad.mat, rad.mat[c(2:nrow(rad.mat), 1), 1])
+
+  # the x and y coords assuming radius of 1
+  y0 <- sin(rad.mat)
+  x0 <- cos(rad.mat)
+
+  # dimension markers
+  nc <- ncol(x0)
+  nr <- nrow(x0)
+  nl <- length(radii)
+
+  # make a copy for each radii, redimension in sick ways
+  x1 <- aperm( x0 %o% radii, c(1, 3, 2))
+  # the same, but coming back the other direction to close the polygon
+  x2 <- x1[, , nc:1]
+  #now stick together
+  x.array <- abind:::abind(x1[, 1:(nl - 1), ], x2[, 2:nl, ], matrix(NA, ncol = (nl - 1), nrow = nr), along = 3)
+  # final product, xcoords, is a single vector, in order,
+  # where all the x coordinates for a cell are arranged
+  # clockwise. cells are separated by NAs- allows a single call to polygon()
+  xcoords <- aperm(x.array, c(3, 1, 2))
+  dim(xcoords) <- c(NULL)
+  # repeat for y coordinates
+  y1 <- aperm( y0 %o% radii,c(1, 3, 2))
+  y2 <- y1[, , nc:1]
+  y.array <- abind:::abind(y1[, 1:(length(radii) - 1), ], y2[, 2:length(radii), ], matrix(NA, ncol = (length(radii) - 1), nrow = nr), along = 3)
+  ycoords <- aperm(y.array, c(3, 1, 2))
+  dim(ycoords) <- c(NULL)
+
+  # sort out colors and breaks:
+  if (!missing(breaks) & !missing(cols)){
+    if (length(breaks) - length(cols) != 1){
+      stop("breaks must be 1 element longer than cols")
+    }
+  }
+  if (missing(breaks) & !missing(cols)){
+    breaks <- seq(min(Mat,na.rm = TRUE), max(Mat, na.rm = TRUE), length = length(cols) + 1)
+  }
+  if (missing(cols) & !missing(breaks)){
+    cols <- rev(heat.colors(length(breaks) - 1))
+    #cols <- rev(rainbow(16)[1:(length(breaks) - 1)])
+    #cols <- rev(rainbow((length(breaks) - 1)+15)[1:(length(breaks) - 1)])
+
+  }
+  if (missing(breaks) & missing(cols)){
+    breaks <- seq(min(Mat,na.rm = TRUE), max(Mat, na.rm = TRUE), length = nbreaks)
+    #cols <- rev(heat.colors(length(breaks) - 1))
+    #cols <- rev(rainbow((length(breaks) - 1)))
+    cols <- rev(rainbow((length(breaks) - 1)+15)[1:(length(breaks) - 1)])
+
+  }
+
+  # get a color for each cell. Ugly, but it gets them in the right order
+  cell.cols <- as.character(cut(as.vector(Mat[nrow(Mat):1,ncol(Mat):1]), breaks = breaks, labels = cols))
+
+  # start empty plot
+  plot(NULL, type = "n", ylim = c(-1, 1) * outer.radius, xlim = c(-1, 1) * outer.radius, asp = 1, axes = FALSE, xlab = "", ylab = "",   xaxt='n',  yaxt='n')
+  # draw polygons with no borders:
+  polygon(xcoords, ycoords, col = cell.cols, border = NA)
+
+  if (axes){
+
+    # a couple internals for axis markup.
+
+    RMat <- function(radians){
+      matrix(c(cos(radians), sin(radians), -sin(radians), cos(radians)), ncol = 2)
+    }
+
+    circle <- function(x, y, rad = 1, nvert = 500){
+      rads <- seq(0,2*pi,length.out = nvert)
+      xcoords <- cos(rads) * rad + x
+      ycoords <- sin(rads) * rad + y
+      cbind(xcoords, ycoords)
+    }
+    # draw circles
+    if (missing(circle.rads)){
+      circle.rads <- pretty(radii)
+    }
+    for (i in circle.rads){
+      lines(circle(0, 0, i), col = "#66666650")
+    }
+
+    # put on radial spoke axes:
+    axis.rads <- c(pi/2, pi/3, pi/6, 0, 5*pi/6, 2*pi/3)
+    #, 0, pi / 6, pi / 3 , pi / 2, 2 * pi / 3, 5 * pi / 6 )
+    r.labs <- c(90, 60, 30, 0, 330, 300)
+    l.labs <- c(270, 240, 210, 180, 150, 120)
+
+    for (i in 1:length(axis.rads)){
+      endpoints <- zapsmall(c(RMat(axis.rads[i]) %*% matrix(c(1, 0, -1, 0) * outer.radius,ncol = 2)))
+      segments(endpoints[1], endpoints[2], endpoints[3], endpoints[4], col = "#66666650")
+      endpoints <- c(RMat(axis.rads[i]) %*% matrix(c(1.1, 0, -1.1, 0) * outer.radius, ncol = 2))
+      lab1 <- bquote(.(r.labs[i]) * degree)
+      lab2 <- bquote(.(l.labs[i]) * degree)
+      text(endpoints[1], endpoints[2], lab1, xpd = TRUE)
+      text(endpoints[3], endpoints[4], lab2, xpd = TRUE)
+    }
+    axis(2, pos = -1.2 * outer.radius, at = sort(union(circle.rads,-circle.rads)))
+  }
+  invisible(list(breaks = breaks, col = cols))
+}
+
+
+Interp_ref <- akima:::interp(
+  x =df1$Phi, 
+  y = df1$Theta, 
+  z = df1$L,
+  extrap = TRUE,
+  xo = c(seq(270, 360, length.out = 75), seq(0, 270, length.out = 225)),
+  yo = seq(0, 90, length.out = 100),
+  linear = FALSE
+)
+
+Mat_ref <- Interp_ref[[3]]
+
+PolarImagePlot(Mat_ref)
+```
+
+## 엑셀 데이터 한번에 불러오기
+
+
+### 여러 엑셀 파일 한번에 불러오기
+
+```{r}
+library(readxl)
+library(purrr)
+
+setwd("D:/r/유형별 r 예제/Data_visualization")
+
+list.files("data/gapminder")
+list.files("data/gapminder", pattern = "[.]xlsx$",full.names = TRUE)
+
+paths <- list.files("data/gapminder", pattern = "[.]xlsx$", full.names = TRUE)
+
+
+files <- map(paths,read_excel)
+length(files)
+class(files)
+list_rbind(files)
+
+
+paths |> 
+  map(read_excel) |> 
+  list_rbind()
+
+
+paths |> 
+  set_names(basename) |> 
+  map(read_excel) |> 
+  list_rbind(names_to = "year") |> 
+  mutate(year = parse_number(year))
+
+gapminder <- paths |> 
+  set_names(basename) |> 
+  map(read_excel) |> 
+  list_rbind(names_to = "year") |> 
+  mutate(year = parse_number(year))
+
+#write_csv(gapminder, "gapminder.csv")
+
+
+# 여러 csv 파일 한번에 읽어오기
+# alltrips <- list.files(pattern = "\\.csv$") %>% map_df(~read_csv(.))
+
+```
+
+
+### 하나의 엑셀, 여러 시트
+```{r}
+library(readxl)
+library(purrr)
+
+setwd("D:/r/유형별 r 예제/Data_visualization/data/")
+
+file_1<- structure(list(file = c("D:/r/유형별 r 예제/Data_visualization/data/gapmider.xlsx"), sheet = excel_sheets("gapmider.xlsx")))
+
+map2(file_1$file, file_1$sheet, ~ read_excel(path = .x, sheet = .y, range = "A1:E143")) %>%
+  list_rbind(names_to = "year") %>%
+  mutate(year = rep(c(file_1$sheet), each = n()/length(file_1$sheet)))
+
+```
+
+
+
+
+
 ## 표로 데이터 보여주기
 
 
