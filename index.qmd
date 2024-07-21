@@ -1041,8 +1041,6 @@ colSums(is.na(airquality2))
 
 \[참고 자료\] <https://rstudio.github.io/cheatsheets/html/data-visualization.html>
 
-
-
 ```{r}
 df <- tibble::tribble(
   ~angle,  ~`4.3`,  ~`3.8`,  ~`3.3`,  ~`2.8`,  ~`2.3`,  ~`1.8`,  ~`1.3`,
@@ -1064,7 +1062,6 @@ df <- tibble::tribble(
   )
 head(df)
 ```
-
 
 #### 1. 산점도 그래프
 
@@ -1088,7 +1085,9 @@ df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%
   theme_bw()+
   facet_wrap(~space, labeller = label_both)
 ```
+
 #### 2. 막대 그래프
+
 ```{r}
 df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%  
   mutate(space = as.numeric(space)) %>% 
@@ -1113,6 +1112,7 @@ df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%
   theme_bw()+
   labs(y="normalized value(%)", x="space 이격거리")
 ```
+
 ```{r}
 df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%  
   mutate(space = as.factor(space)) %>% 
@@ -1122,7 +1122,8 @@ df %>% pivot_longer(-1, names_to = "space", values_to = "value") %>%
   theme_bw()+
   labs(y="normalized value(%)", x="space 이격거리")
 ```
-- 평균값 넣기
+
+-   평균값 넣기
 
 ```{r}
 
@@ -1143,9 +1144,7 @@ p+
 
 ```
 
-
 \[참고자료\]<https://ggplot2.tidyverse.org/reference/geom_boxplot.html>
-
 
 #### 4. Color 팔레트
 
@@ -1166,13 +1165,11 @@ scale_colour_brewer(palette="Set1")
 
 \[Sci-Fi\](<https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html>)
 
-
-#### 5. 테마 
+#### 5. 테마
 
 \[theme\](<https://ggplot2.tidyverse.org/reference/ggtheme.html>)
 
 ## Day3 (Homework)
-
 
 #### viloin 그래프
 
@@ -1193,8 +1190,6 @@ warpbreaks |> ggplot(aes(x = tension, y = breaks, fill = tension)) +
 
 
 ```
-
-
 
 #### Density 그래프
 
@@ -1224,6 +1219,7 @@ df |> ggplot(aes(x = x, fill = group)) +
  
 
 ```
+
 #### boxplot+density+point
 
 \[참고자료\]<https://mjskay.github.io/ggdist/>
@@ -1266,9 +1262,6 @@ mpg %>%
   )
 
 ```
-
-
-
 
 #### Pair 그래프
 
@@ -1484,9 +1477,8 @@ htmlwidgets::saveWidget(p2, "myplot.html")
 
 #### 실전 팁
 
-::: {.callout-note}
-xyz 로 이루어진 데이터이미지화 하기기
-주로 `gradual map` 이미지로 표현
+::: callout-note
+xyz 로 이루어진 데이터이미지화 하기기 주로 `gradual map` 이미지로 표현
 :::
 
 ```{r}
@@ -1496,11 +1488,11 @@ df <- read.csv("https://raw.githubusercontent.com/waterfirst/Data_visualization/
 
 head(df)
 ```
+
 ```{r}
 df |>   pivot_longer(cols = 1:40, names_to = "x", values_to = "z") %>%
   mutate(y= rep(seq(1:40), 30),  x= rep(seq(1:30), each=40), z=(z-min(z))/10000) -> df1
 ```
-
 
 ```{r}
 df1 %>% ggplot(aes(x=x, y=y, fill=z))+geom_tile()+
@@ -1516,8 +1508,6 @@ df1 |>  ggplot(aes(x=x, y=y, fill=z)) +
   geom_raster()+
     scale_fill_viridis_c()
 ```
-
-
 
 ```{r}
 
@@ -1539,27 +1529,6 @@ filled.contour(x=c(1:nrow(df)),
                key.axes = axis(4, seq(0, 8, by = 0.1))) 
 
 ```
-#### 3d grahp
-<https://www.rayshader.com/reference/plot_gg.html>
-
-
-```{r}
-library(rayshader)
-mtplot_density = ggplot(mtcars) + 
- stat_density_2d(aes(x=mpg,y=disp, fill=after_stat(!!str2lang("density"))), 
-                 geom = "raster", contour = FALSE) +
- scale_x_continuous(expand=c(0,0)) +
- scale_y_continuous(expand=c(0,0)) +
- scale_fill_gradient(low="pink", high="red")
-mtplot_density
-
-```
-
-```{r}
-plot_gg(mtplot_density, width = 4,zoom = 0.60, theta = -45, phi = 30, 
-       windowsize = c(1400,866))
-render_snapshot()
-```
 
 #### Polar contour graph
 
@@ -1570,6 +1539,7 @@ head(df)
 
 
 ```
+
 ```{r}
 
 library(tidyverse)
@@ -1716,7 +1686,6 @@ PolarImagePlot(Mat_ref)
 
 ## 엑셀 데이터 한번에 불러오기
 
-
 ### 여러 엑셀 파일 한번에 불러오기
 
 ```{r}
@@ -1762,8 +1731,8 @@ gapminder <- paths |>
 
 ```
 
-
 ### 하나의 엑셀, 여러 시트
+
 ```{r}
 library(readxl)
 library(purrr)
@@ -1778,19 +1747,13 @@ map2(file_1$file, file_1$sheet, ~ read_excel(path = .x, sheet = .y, range = "A1:
 
 ```
 
-
-
-
-
 ## 표로 데이터 보여주기
-
 
 ### gt 패키지 이용하기
 
+-   \[gt package\]<https://gt.rstudio.com/articles/gt.html>
 
-- [gt package]<https://gt.rstudio.com/articles/gt.html>
-
-1) 간단한 테이블 만들어보기 (나라별 섬 갯수)
+1)  간단한 테이블 만들어보기 (나라별 섬 갯수)
 
 ```{r}
 library(tidyverse)
@@ -1807,9 +1770,7 @@ df |>
   gt()
 ```
 
-
-![](https://gt.rstudio.com/reference/figures/gt_parts_of_a_table.svg){width="719"}
-2) Title, subtitle 넣기
+![](https://gt.rstudio.com/reference/figures/gt_parts_of_a_table.svg){width="719"} 2) Title, subtitle 넣기
 
 ```{r}
 
@@ -1822,7 +1783,8 @@ df |>
     subtitle = "The top ten largest are presented"
   )
 ```
-3) 제목 꾸미기 (마크다운 문법 md)
+
+3)  제목 꾸미기 (마크다운 문법 md)
 
 ```{r}
 df |> 
@@ -1834,7 +1796,9 @@ df |>
     subtitle = md("The *top two* largest are presented")
   )
 ```
-4) 바닥글에 출처 넣기(tab_source_note)
+
+4)  바닥글에 출처 넣기(tab_source_note)
+
 ```{r}
 df |> 
   arrange(-size)|>
@@ -1851,7 +1815,8 @@ df |>
     source_note = md("Reference: McNeil, D. R. (1977) *Interactive Data Analysis*. Wiley.")
   )
 ```
-5) 주석 넣기(tab_footnote)
+
+5)  주석 넣기(tab_footnote)
 
 ```{r}
 df |> 
@@ -1889,7 +1854,9 @@ df |>
     )
   )
 ```
-6) table 저장하기
+
+6)  table 저장하기
+
 ```{r}
 df |> 
   arrange(-size)|>
@@ -1929,4 +1896,1234 @@ df |>
   gtsave("tab_1.png", expand = 10)
 ```
 
+## Day4
 
+### 1. 지도그리기
+
+\[datatoys\]<https://github.com/statgarten/datatoys>
+
+데이터토이에서 맛집 (datatoys::restaurant) 을 이용하여 지도에 표시하기
+
+leaflet 패키지 이용하기 (<https://bigdata-anlysis.tistory.com/34>)
+
+```{r}
+library(datatoys)
+library(tidyverse)
+
+library(gt)
+library(leaflet)
+
+
+set.seed(1234)
+
+df <- datatoys::restaurant 
+gt(df |> head())
+colnames(df)
+df %>% rename(lat = WGS84위도, lng = WGS84경도) %>% 
+  select(lng, lat, 음식점명) -> m
+
+leaflet() %>%  
+  addTiles() %>% 
+  addMarkers(lng = as.numeric(m$lng), lat = as.numeric(m$lat), popup=m$음식점명)
+
+```
+
+### 2. 머신러닝
+
+![참조 : https://star7sss.tistory.com/410](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FS3MxJ%2FbtryQ1SaveU%2F9JsPZ0BPGJG1ubb4Tds8q0%2Fimg.png)
+
+![](images/machine_learning_1.png)
+
+### 2.1 지도학습 \[회귀 분석\]
+
+R에서 회귀 분석을 위해 사용할 수 있는 주요 패키지들은 다음과 같습니다:
+
+-   `stats`: R의 기본 패키지로, 선형 회귀를 위한 `lm()` 함수를 제공합니다.
+
+-   `glmnet`: 정규화된 일반화 선형 모델을 위한 패키지입니다.
+
+-   `randomForest`: 랜덤 포레스트 알고리즘을 구현한 패키지입니다.
+
+-   `rpart`: 결정 트리 알고리즘을 구현한 패키지입니다.
+
+-   `e1071`: 서포트 벡터 머신(SVM)을 포함한 여러 기계학습 알고리즘을 제공합니다.
+
+-   `class`: k-최근접 이웃(KNN) 알고리즘을 위한 패키지입니다.
+
+1.  선형 회귀 분석
+
+```{r}
+# 선형 회귀 예제
+# 필요한 패키지 로드
+library(ggplot2)
+
+# 데이터 생성
+set.seed(123)
+n <- 100
+x <- runif(n, 0, 10)
+y <- 2 + 3 * x + rnorm(n, 0, 1.5)
+data <- data.frame(x = x, y = y)
+
+# 선형 회귀 모델 생성
+model <- lm(y ~ x, data = data)
+
+# 모델 요약
+summary(model)
+
+# 시각화
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_minimal() +
+  labs(title = "선형 회귀 예제",
+       x = "독립 변수",
+       y = "종속 변수")
+
+# 예측
+new_data <- data.frame(x = c(5, 7, 9))
+predictions <- predict(model, newdata = new_data)
+print(predictions)
+
+# 설명:
+# 1. 먼저 필요한 패키지(ggplot2)를 로드합니다.
+# 2. 임의의 데이터를 생성합니다. x는 0에서 10 사이의 균일 분포, y는 x와 선형 관계를 가지며 약간의 노이즈를 추가합니다.
+# 3. lm() 함수를 사용하여 선형 회귀 모델을 생성합니다.
+# 4. summary() 함수로 모델의 상세 정보를 확인합니다.
+# 5. ggplot2를 사용하여 데이터와 회귀선을 시각화합니다.
+# 6. 새로운 x 값에 대한 y 값을 예측합니다.
+
+# 이 예제를 통해 기본적인 선형 회귀 분석의 과정을 이해할 수 있습니다.
+```
+
+2.  랜덤포레스트 회귀 분석
+
+```{r}
+# 랜덤 포레스트 예제
+# 필요한 패키지 로드
+library(randomForest)
+library(ggplot2)
+
+# 데이터 준비 (Boston 주택 가격 데이터셋 사용)
+data(Boston, package = "MASS")
+
+# 데이터 분할 (훈련 세트와 테스트 세트)
+set.seed(123)
+train_index <- sample(1:nrow(Boston), 0.7 * nrow(Boston))
+train_data <- Boston[train_index, ]
+test_data <- Boston[-train_index, ]
+
+# 랜덤 포레스트 모델 생성
+rf_model <- randomForest(medv ~ ., data = train_data, ntree = 500, importance = TRUE)
+
+# 모델 요약
+print(rf_model)
+
+# 변수 중요도 시각화
+importance_df <- as.data.frame(importance(rf_model))
+importance_df$feature <- rownames(importance_df)
+
+ggplot(importance_df, aes(x = reorder(feature, IncNodePurity), y = IncNodePurity)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "랜덤 포레스트 - 변수 중요도",
+       x = "특성",
+       y = "노드 불순도 감소")
+
+# 테스트 세트에 대한 예측
+predictions <- predict(rf_model, newdata = test_data)
+
+# 모델 평가 (RMSE 계산)
+rmse <- sqrt(mean((predictions - test_data$medv)^2))
+print(paste("RMSE:", rmse))
+
+# 설명:
+# 1. randomForest 패키지를 로드합니다.
+# 2. Boston 주택 가격 데이터셋을 사용합니다.
+# 3. 데이터를 훈련 세트와 테스트 세트로 분할합니다.
+# 4. randomForest() 함수로 모델을 생성합니다. 종속 변수는 medv(주택 가격)입니다.
+# 5. 모델 요약 정보를 출력합니다.
+# 6. 변수 중요도를 시각화합니다.
+# 7. 테스트 세트에 대한 예측을 수행하고 RMSE를 계산하여 모델 성능을 평가합니다.
+
+# 이 예제를 통해 랜덤 포레스트를 사용한 회귀 분석의 과정을 이해할 수 있습니다.
+```
+
+3.  결정 트리 회귀 분석
+
+```{r}
+# 결정 트리 예제
+# 필요한 패키지 로드
+library(rpart)
+library(rpart.plot)
+library(ggplot2)
+
+# 데이터 준비 (Boston 주택 가격 데이터셋 사용)
+data(Boston, package = "MASS")
+
+# 데이터 분할 (훈련 세트와 테스트 세트)
+set.seed(123)
+train_index <- sample(1:nrow(Boston), 0.7 * nrow(Boston))
+train_data <- Boston[train_index, ]
+test_data <- Boston[-train_index, ]
+
+# 결정 트리 모델 생성
+tree_model <- rpart(medv ~ ., data = train_data, method = "anova")
+
+# 모델 요약
+summary(tree_model)
+
+# 결정 트리 시각화
+rpart.plot(tree_model, box.palette = "RdBu", shadow.col = "gray", nn = TRUE)
+
+# 변수 중요도 시각화
+importance_df <- data.frame(
+  feature = names(tree_model$variable.importance),
+  importance = tree_model$variable.importance
+)
+
+ggplot(importance_df, aes(x = reorder(feature, importance), y = importance)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "결정 트리 - 변수 중요도",
+       x = "특성",
+       y = "중요도")
+
+# 테스트 세트에 대한 예측
+predictions <- predict(tree_model, newdata = test_data)
+
+# 모델 평가 (RMSE 계산)
+rmse <- sqrt(mean((predictions - test_data$medv)^2))
+print(paste("RMSE:", rmse))
+
+# 설명:
+# 1. rpart와 rpart.plot 패키지를 로드합니다.
+# 2. Boston 주택 가격 데이터셋을 사용합니다.
+# 3. 데이터를 훈련 세트와 테스트 세트로 분할합니다.
+# 4. rpart() 함수로 결정 트리 모델을 생성합니다. method="anova"는 회귀 트리를 의미합니다.
+# 5. 모델 요약 정보를 출력합니다.
+# 6. rpart.plot() 함수로 결정 트리를 시각화합니다.
+# 7. 변수 중요도를 시각화합니다.
+# 8. 테스트 세트에 대한 예측을 수행하고 RMSE를 계산하여 모델 성능을 평가합니다.
+
+# 이 예제를 통해 결정 트리를 사용한 회귀 분석의 과정을 이해할 수 있습니다.
+```
+
+### 2.2 지도학습 \[분류 분석\]
+
+1.  `stats`: R의 기본 패키지로, 로지스틱 회귀를 위한 `glm()` 함수를 제공합니다.
+
+2.  `randomForest`: 랜덤 포레스트 알고리즘을 구현한 패키지입니다.
+
+3.  `rpart`: 결정 트리 알고리즘을 구현한 패키지입니다.
+
+4.  `e1071`: 서포트 벡터 머신(SVM)을 포함한 여러 기계학습 알고리즘을 제공합니다.
+
+5.  `class`: k-최근접 이웃(KNN) 알고리즘을 위한 패키지입니다.
+
+6.  `caret`: 다양한 분류 알고리즘을 통합적으로 다룰 수 있는 패키지입니다.
+
+<!-- -->
+
+1.  로지스틱 회귀 (glm)
+
+    ```{r}
+    # 로지스틱 회귀 예제
+    # 필요한 패키지 로드
+    library(ggplot2)
+    library(caret)
+
+    # 데이터 준비 (iris 데이터셋 사용)
+    data(iris)
+    # 간단한 이진 분류를 위해 setosa와 versicolor만 사용
+    iris_binary <- iris[iris$Species != "virginica", ]
+    iris_binary$Species <- factor(iris_binary$Species)
+
+    # 데이터 분할 (훈련 세트와 테스트 세트)
+    set.seed(123)
+    train_index <- createDataPartition(iris_binary$Species, p = 0.7, list = FALSE)
+    train_data <- iris_binary[train_index, ]
+    test_data <- iris_binary[-train_index, ]
+
+    # 로지스틱 회귀 모델 생성
+    model <- glm(Species ~ Petal.Length + Petal.Width, data = train_data, family = "binomial")
+
+    # 모델 요약
+    summary(model)
+
+    # 결정 경계 시각화
+    ggplot(train_data, aes(x = Petal.Length, y = Petal.Width, color = Species)) +
+      geom_point() +
+      stat_function(fun = function(x) {-coef(model)[1]/coef(model)[3] - coef(model)[2]/coef(model)[3] * x}, 
+                    geom = "line", color = "black") +
+      theme_minimal() +
+      labs(title = "로지스틱 회귀 - 결정 경계",
+           x = "꽃잎 길이",
+           y = "꽃잎 너비")
+
+    # 테스트 세트에 대한 예측
+    predictions <- predict(model, newdata = test_data, type = "response")
+    predicted_classes <- ifelse(predictions > 0.5, "versicolor", "setosa")
+
+    # 모델 평가 (정확도, 혼동 행렬)
+    accuracy <- mean(predicted_classes == test_data$Species)
+    conf_matrix <- table(Predicted = predicted_classes, Actual = test_data$Species)
+
+    print(paste("정확도:", accuracy))
+    print("혼동 행렬:")
+    print(conf_matrix)
+
+    # 설명:
+    # 1. iris 데이터셋을 사용하여 이진 분류 문제를 설정합니다.
+    # 2. caret 패키지의 createDataPartition() 함수로 데이터를 분할합니다.
+    # 3. glm() 함수로 로지스틱 회귀 모델을 생성합니다. family="binomial"은 로지스틱 회귀를 의미합니다.
+    # 4. 모델 요약 정보를 출력합니다.
+    # 5. ggplot2를 사용하여 결정 경계를 시각화합니다.
+    # 6. 테스트 세트에 대한 예측을 수행하고 정확도와 혼동 행렬을 계산하여 모델 성능을 평가합니다.
+
+    # 이 예제를 통해 로지스틱 회귀를 사용한 이진 분류의 과정을 이해할 수 있습니다.
+    ```
+
+2.  랜덤포레스트 (randomforest)
+
+    ```{r}
+    # 랜덤 포레스트 분류 예제
+    # 필요한 패키지 로드
+    library(randomForest)
+    library(ggplot2)
+    library(caret)
+
+    # 데이터 준비 (iris 데이터셋 사용)
+    data(iris)
+
+    # 데이터 분할 (훈련 세트와 테스트 세트)
+    set.seed(123)
+    train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+    train_data <- iris[train_index, ]
+    test_data <- iris[-train_index, ]
+
+    # 랜덤 포레스트 모델 생성
+    rf_model <- randomForest(Species ~ ., data = train_data, ntree = 500, importance = TRUE)
+
+    # 모델 요약
+    print(rf_model)
+
+    # 변수 중요도 시각화
+    importance_df <- as.data.frame(importance(rf_model))
+    importance_df$feature <- rownames(importance_df)
+
+    ggplot(importance_df, aes(x = reorder(feature, MeanDecreaseGini), y = MeanDecreaseGini)) +
+      geom_bar(stat = "identity", fill = "skyblue") +
+      coord_flip() +
+      theme_minimal() +
+      labs(title = "랜덤 포레스트 - 변수 중요도",
+           x = "특성",
+           y = "평균 지니 계수 감소")
+
+    # 테스트 세트에 대한 예측
+    predictions <- predict(rf_model, newdata = test_data)
+
+    # 모델 평가 (정확도, 혼동 행렬)
+    accuracy <- mean(predictions == test_data$Species)
+    conf_matrix <- table(Predicted = predictions, Actual = test_data$Species)
+
+    print(paste("정확도:", accuracy))
+    print("혼동 행렬:")
+    print(conf_matrix)
+
+    # 첫 두 특성을 사용한 결정 경계 시각화
+    rf_model2 <- randomForest(Species ~ Sepal.Length+Sepal.Width, data = train_data, ntree = 500, importance = TRUE)
+
+    plot_data <- expand.grid(
+      Sepal.Length = seq(min(iris$Sepal.Length), max(iris$Sepal.Length), length.out = 100),
+      Sepal.Width = seq(min(iris$Sepal.Width), max(iris$Sepal.Width), length.out = 100)
+
+    )
+    plot_data$Species <- predict(rf_model2, newdata = plot_data)
+
+    ggplot() +
+      geom_tile(data = plot_data, aes(x = Sepal.Length, y = Sepal.Width, fill = Species), alpha = 0.3) +
+      geom_point(data = iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+      theme_minimal() +
+      labs(title = "랜덤 포레스트 - 결정 경계",
+           x = "꽃받침 길이(Sepal.Length)",
+           y = "꽃받침 너비(Sepal.Width)")
+
+    # 설명:
+    # 1. randomForest 패키지를 사용하여 iris 데이터셋에 대한 분류 모델을 생성합니다.
+    # 2. 데이터를 훈련 세트와 테스트 세트로 분할합니다.
+    # 3. randomForest() 함수로 모델을 생성합니다.
+    # 4. 모델 요약 정보를 출력합니다.
+    # 5. 변수 중요도를 시각화합니다.
+    # 6. 테스트 세트에 대한 예측을 수행하고 정확도와 혼동 행렬을 계산하여 모델 성능을 평가합니다.
+    # 7. 첫 두 특성(꽃받침 길이와 너비)을 사용하여 결정 경계를 시각화합니다.
+
+    # 이 예제를 통해 랜덤 포레스트를 사용한 다중 분류의 과정을 이해할 수 있습니다.
+    ```
+
+3.  결정트리 (rpart : 의사결정나무)
+
+```{r}
+# 결정 트리 분류 예제
+# 필요한 패키지 로드
+library(rpart)
+library(rpart.plot)
+library(caret)
+library(ggplot2)
+
+# 데이터 준비 (iris 데이터셋 사용)
+data(iris)
+
+# 데이터 분할 (훈련 세트와 테스트 세트)
+set.seed(123)
+train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+train_data <- iris[train_index, ]
+test_data <- iris[-train_index, ]
+
+# 결정 트리 모델 생성
+tree_model <- rpart(Species ~ ., data = train_data, method = "class")
+
+# 모델 요약
+summary(tree_model)
+
+# 결정 트리 시각화
+rpart.plot(tree_model, 
+           box.palette = "Blues", # "RdYlBu" 대신 "Blues" 사용
+           shadow.col = "gray", 
+           nn = TRUE)
+
+
+# 변수 중요도 시각화
+
+importance_df <- data.frame(
+  feature = names(tree_model$variable.importance),
+  importance = tree_model$variable.importance
+)
+
+ggplot(importance_df, aes(x = reorder(feature, importance), y = importance)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "결정 트리 - 변수 중요도",
+       x = "특성",
+       y = "중요도")
+
+# 테스트 세트에 대한 예측
+predictions <- predict(tree_model, newdata = test_data, type = "class")
+
+# 모델 평가 (정확도, 혼동 행렬)
+accuracy <- mean(predictions == test_data$Species)
+conf_matrix <- table(Predicted = predictions, Actual = test_data$Species)
+
+print(paste("정확도:", accuracy))
+print("혼동 행렬:")
+print(conf_matrix)
+
+
+
+# 첫 두 특성을 사용한 결정 경계 시각화
+tree_model2 <- rpart(Species ~Sepal.Length+Sepal.Width, data = train_data, method = "class")
+
+
+plot_data <- expand.grid(
+  Sepal.Length = seq(min(iris$Sepal.Length), max(iris$Sepal.Length), length.out = 100),
+  Sepal.Width = seq(min(iris$Sepal.Width), max(iris$Sepal.Width), length.out = 100)
+)
+plot_data$Species <- predict(tree_model2, newdata = plot_data, type = "class")
+
+ggplot() +
+  geom_tile(data = plot_data, aes(x = Sepal.Length, y = Sepal.Width, fill = Species), alpha = 0.3) +
+  geom_point(data = iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  theme_minimal() +
+  labs(title = "결정 트리 - 결정 경계",
+       x = "꽃받침 길이",
+       y = "꽃받침 너비")
+
+# 설명:
+# 1. rpart 패키지를 사용하여 iris 데이터셋에 대한 결정 트리 모델을 생성합니다.
+# 2. 데이터를 훈련 세트와 테스트 세트로 분할합니다.
+# 3. rpart() 함수로 모델을 생성합니다. method="class"는 분류 트리를 의미합니다.
+# 4. 모델 요약 정보를 출력합니다.
+# 5. rpart.plot() 함수로 결정 트리를 시각화합니다.
+# 6. 변수 중요도를 시각화합니다.
+# 7. 테스트 세트에 대한 예측을 수행하고 정확도와 혼동 행렬을 계산하여 모델 성능을 평가합니다.
+# 8. 첫 두 특성(꽃받침 길이와 너비)을 사용하여 결정 경계를 시각화합니다.
+
+# 이 예제를 통해 결정 트리를 사용한 다중 분류의 과정을 이해할 수 있습니다.
+```
+
+4.  SVM(서포트 벡터 머신)
+
+```{r}
+# SVM 분류 예제
+# 필요한 패키지 로드
+library(e1071)
+library(caret)
+library(ggplot2)
+
+# 데이터 준비 (iris 데이터셋 사용)
+data(iris)
+
+# 데이터 정규화 함수
+normalize <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}
+
+# 데이터 정규화
+iris_normalized <- as.data.frame(lapply(iris[, 1:4], normalize))
+iris_normalized$Species <- iris$Species
+
+# 데이터 분할 (훈련 세트와 테스트 세트)
+set.seed(123)
+train_index <- createDataPartition(iris_normalized$Species, p = 0.7, list = FALSE)
+train_data <- iris_normalized[train_index, ]
+test_data <- iris_normalized[-train_index, ]
+
+# SVM 모델 생성
+svm_model <- svm(Species ~ ., data = train_data, kernel = "radial", cost = 1, gamma = 0.5)
+
+# 모델 요약
+summary(svm_model)
+
+# 테스트 세트에 대한 예측
+predictions <- predict(svm_model, newdata = test_data)
+
+# 모델 평가 (정확도, 혼동 행렬)
+accuracy <- mean(predictions == test_data$Species)
+conf_matrix <- table(Predicted = predictions, Actual = test_data$Species)
+
+print(paste("정확도:", accuracy))
+print("혼동 행렬:")
+print(conf_matrix)
+
+# 첫 두 특성을 사용한 결정 경계 시각화
+
+svm_model2 <- svm(Species ~Sepal.Length+Sepal.Width, data = train_data, kernel = "radial", cost = 1, gamma = 0.5)
+
+plot_data <- expand.grid(
+  Sepal.Length = seq(0, 1, length.out = 100),
+  Sepal.Width = seq(0, 1, length.out = 100)
+)
+plot_data$Species <- predict(svm_model2, newdata = plot_data)
+
+ggplot() +
+  geom_tile(data = plot_data, aes(x = Sepal.Length, y = Sepal.Width, fill = Species), alpha = 0.3) +
+  geom_point(data = iris_normalized, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  theme_minimal() +
+  labs(title = "SVM - 결정 경계",
+       x = "정규화된 꽃받침 길이",
+       y = "정규화된 꽃받침 너비")
+
+# 설명:
+# 1. e1071 패키지를 사용하여 iris 데이터셋에 대한 SVM 모델을 생성합니다.
+# 2. 데이터를 정규화합니다. SVM은 특성의 스케일에 민감하므로 이 단계가 중요합니다.
+# 3. 데이터를 훈련 세트와 테스트 세트로 분할합니다.
+# 4. svm() 함수로 모델을 생성합니다. 여기서는 RBF 커널을 사용합니다.
+# 5. 모델 요약 정보를 출력합니다.
+# 6. 테스트 세트에 대한 예측을 수행하고 정확도와 혼동 행렬을 계산하여 모델 성능을 평가합니다.
+# 7. 첫 두 특성(꽃받침 길이와 너비)을 사용하여 결정 경계를 시각화합니다.
+
+# 이 예제를 통해 SVM을 사용한 다중 분류의 과정을 이해할 수 있습니다.
+# 주의: SVM은 대규모 데이터셋에 대해 계산 비용이 높을 수 있습니다.
+```
+
+5.  KNN(K 최근접이웃 모델)
+
+```{r}
+# KNN 분류 예제
+# 필요한 패키지 로드
+library(class)
+library(caret)
+library(ggplot2)
+
+# 데이터 준비 (iris 데이터셋 사용)
+data(iris)
+
+# 데이터 정규화 함수
+normalize <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}
+
+# 데이터 정규화
+iris_normalized <- as.data.frame(lapply(iris[, 1:4], normalize))
+iris_normalized$Species <- iris$Species
+
+# 데이터 분할 (훈련 세트와 테스트 세트)
+set.seed(123)
+train_index <- createDataPartition(iris_normalized$Species, p = 0.7, list = FALSE)
+train_data <- iris_normalized[train_index, ]
+test_data <- iris_normalized[-train_index, ]
+
+# KNN 모델 생성 및 예측 (k=5 사용)
+k <- 5
+predictions <- knn(train = train_data[, 1:4], 
+                   test = test_data[, 1:4], 
+                   cl = train_data$Species, 
+                   k = k)
+
+# 모델 평가 (정확도, 혼동 행렬)
+accuracy <- mean(predictions == test_data$Species)
+conf_matrix <- table(Predicted = predictions, Actual = test_data$Species)
+
+print(paste("정확도:", accuracy))
+print("혼동 행렬:")
+print(conf_matrix)
+
+# 첫 두 특성을 사용한 결정 경계 시각화
+
+
+plot_data <- expand.grid(
+  Sepal.Length = seq(0, 1, length.out = 100),
+  Sepal.Width = seq(0, 1, length.out = 100)
+)
+plot_predictions <- knn(train = train_data[, 1:2], 
+                        test = plot_data, 
+                        cl = train_data$Species, 
+                        k = k)
+
+plot_data$Species <- plot_predictions
+
+ggplot() +
+  geom_tile(data = plot_data, aes(x = Sepal.Length, y = Sepal.Width, fill = Species), alpha = 0.3) +
+  geom_point(data = iris_normalized, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  theme_minimal() +
+  labs(title = paste("KNN (k =", k, ") - 결정 경계"),
+       x = "정규화된 꽃받침 길이",
+       y = "정규화된 꽃받침 너비")
+
+# KNN의 k 값에 따른 정확도 변화
+k_values <- 1:20
+accuracies <- sapply(k_values, function(k) {
+  predictions <- knn(train = train_data[, 1:4], 
+                     test = test_data[, 1:4], 
+                     cl = train_data$Species, 
+                     k = k)
+  mean(predictions == test_data$Species)
+})
+
+ggplot(data.frame(k = k_values, accuracy = accuracies), aes(x = k, y = accuracy)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(title = "KNN - k 값에 따른 정확도 변화",
+       x = "k",
+       y = "정확도")
+
+# 설명:
+# 1. class 패키지의 knn() 함수를 사용하여 iris 데이터셋에 대한 KNN 모델을 생성합니다.
+# 2. 데이터를 정규화합니다. KNN은 특성의 스케일에 민감하므로 이 단계가 중요합니다.
+# 3. 데이터를 훈련 세트와 테스트 세트로 분할합니다.
+# 4. knn() 함수로 예측을 수행합니다. 여기서는 k=5를 사용합니다.
+# 5. 정확도와 혼동 행렬을 계산하여 모델 성능을 평가합니다.
+# 6. 첫 두 특성(꽃받침 길이와 너비)을 사용하여 결정 경계를 시각화합니다.
+# 7. k 값에 따른 정확도 변화를 그래프로 나타냅니다.
+
+# 이 예제를 통해 KNN을 사용한 다중 분류의 과정과 k 값 선택의 중요성을 이해할 수 있습니다.
+```
+
+### 2.3 모델평가
+
+#### 교차 검증 (Cross-Validation) 교차 검증은 모델의 일반화 성능을 평가하기 위한 방법입니다. 가장 일반적인 형태는 k-fold 교차 검증입니다.
+
+k-fold 교차 검증: 데이터를 k개의 부분집합으로 나누고, k번의 학습과 평가를 수행합니다. 각 반복에서 하나의 부분집합을 테스트 세트로, 나머지를 훈련 세트로 사용합니다.
+
+#### 회귀 분석 평가 지표
+
+회귀 분석에서 모델의 성능을 평가하기 위해 사용되는 주요 지표들은 다음과 같습니다:
+
+| 지표                                  | 수식                                                                                | 설명                               | 해석                                                         |
+|------------------|------------------|------------------|------------------|
+| R-squared (결정계수)                  | $R^2 = 1 - \frac{\sum_{i=1}^n (y_i - \hat{y}_i)^2}{\sum_{i=1}^n (y_i - \bar{y})^2}$ | 모델이 설명하는 분산의 비율        | 0에서 1 사이의 값. 1에 가까울수록 모델의 설명력이 높음       |
+| Adjusted R-squared                    | $R^2_{adj} = 1 - (1-R^2)\frac{n-1}{n-p-1}$                                          | 변수의 수를 고려한 R-squared       | R-squared와 유사하나, 불필요한 변수 추가에 대해 페널티 부여  |
+| Mean Squared Error (MSE)              | $MSE = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y}_i)^2$                                 | 예측값과 실제값 차이의 제곱 평균   | 값이 작을수록 좋음. 단위는 종속변수의 제곱                   |
+| Root Mean Squared Error (RMSE)        | $RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^n (y_i - \hat{y}_i)^2}$                         | MSE의 제곱근                       | MSE와 같은 의미이나, 종속변수와 같은 단위를 가짐             |
+| Mean Absolute Error (MAE)             | $MAE = \frac{1}{n}\sum_{i=1}^n \|y_i - \hat{y}_i\|$                                 | 예측값과 실제값 차이의 절대값 평균 | RMSE보다 이상치에 덜 민감함                                  |
+| Mean Absolute Percentage Error (MAPE) | $MAPE = \frac{100\%}{n}\sum_{i=1}^n \|\frac{y_i - \hat{y}_i}{y_i}\|$                | 예측값과 실제값 차이의 백분율 평균 | 백분율로 표현되어 직관적, 단 실제값이 0에 가까우면 문제 발생 |
+
+여기서, - $y_i$는 실제값 - $\hat{y}_i$는 예측값 - $\bar{y}$는 실제값의 평균 - $n$은 샘플의 수 - $p$는 독립 변수의 수
+
+각 지표의 특성:
+
+1.  **R-squared**: 모델이 데이터의 변동성을 얼마나 잘 설명하는지 나타냅니다. 하지만 변수가 추가될 때마다 항상 증가하는 경향이 있어, 모델의 복잡성을 고려하지 않습니다.
+
+2.  **Adjusted R-squared**: R-squared의 단점을 보완하여, 불필요한 변수 추가에 대해 페널티를 부여합니다.
+
+3.  **MSE와 RMSE**: 예측의 정확도를 측정합니다. 오차를 제곱하므로 큰 오차에 더 민감합니다.
+
+4.  **MAE**: MSE와 RMSE에 비해 이상치에 덜 민감합니다. 중앙값 예측에 최적화됩니다.
+
+5.  **MAPE**: 직관적으로 해석하기 쉽지만, 실제값이 0에 가까울 때 문제가 발생할 수 있습니다.
+
+이러한 지표들을 종합적으로 고려하여 모델의 성능을 평가하는 것이 좋습니다.
+
+#### 분류 분석 평가 지표 정확도 (Accuracy)
+
+**Confusion Matrix 관련 평가 지표**
+
+먼저, confusion matrix의 기본 구조를 살펴보겠습니다:
+
+|                | 예측: Positive      | 예측: Negative      |
+|----------------|---------------------|---------------------|
+| 실제: Positive | TP (True Positive)  | FN (False Negative) |
+| 실제: Negative | FP (False Positive) | TN (True Negative)  |
+
+이 matrix를 바탕으로 다양한 평가 지표를 계산할 수 있습니다:
+
+| 지표                                      | 수식                                                                    | 설명                                         |
+|------------------------|------------------------|------------------------|
+| 정확도 (Accuracy)                         | $\frac{TP + TN}{TP + TN + FP + FN}$                                     | 전체 예측 중 올바른 예측의 비율              |
+| 정밀도 (Precision)                        | $\frac{TP}{TP + FP}$                                                    | Positive로 예측한 것 중 실제 Positive의 비율 |
+| 재현율 (Recall) 또는 민감도 (Sensitivity) | $\frac{TP}{TP + FN}$                                                    | 실제 Positive 중 Positive로 예측한 비율      |
+| 특이도 (Specificity)                      | $\frac{TN}{TN + FP}$                                                    | 실제 Negative 중 Negative로 예측한 비율      |
+| F1 점수                                   | $2 \cdot \frac{Precision \cdot Recall}{Precision + Recall}$             | 정밀도와 재현율의 조화평균                   |
+| MCC (Matthews Correlation Coefficient)    | $\frac{TP \cdot TN - FP \cdot FN}{\sqrt{(TP+FP)(TP+FN)(TN+FP)(TN+FN)}}$ | -1에서 1 사이의 값, 1에 가까울수록 좋은 예측 |
+
+추가적인 지표들:
+
+| 지표                            | 수식                 | 설명                                         |
+|------------------------|------------------------|------------------------|
+| False Positive Rate (FPR)       | $\frac{FP}{FP + TN}$ | 실제 Negative 중 Positive로 잘못 예측한 비율 |
+| False Negative Rate (FNR)       | $\frac{FN}{TP + FN}$ | 실제 Positive 중 Negative로 잘못 예측한 비율 |
+| Positive Predictive Value (PPV) | $\frac{TP}{TP + FP}$ | 정밀도와 동일                                |
+| Negative Predictive Value (NPV) | $\frac{TN}{TN + FN}$ | Negative로 예측한 것 중 실제 Negative의 비율 |
+
+이러한 지표들은 모델의 성능을 다양한 각도에서 평가할 수 있게 해줍니다. 문제의 특성과 중요도에 따라 적절한 지표를 선택하여 사용해야 합니다.
+
+AUC-ROC
+
+ROC 곡선 아래의 면적입니다. 모델의 분류 성능을 나타내며, 0.5에서 1 사이의 값을 가집니다. 1에 가까울수록 좋은 성능을 의미합니다.
+
+```{r}
+# Confusion Matrix 시각화
+library(caret)
+library(ggplot2)
+library(randomForest)
+
+# 데이터 준비 (iris 데이터셋 사용)
+data(iris)
+iris_binary <- iris[iris$Species != "virginica", ]
+iris_binary$Species <- factor(iris_binary$Species)
+
+# 모델 훈련
+set.seed(123)
+rf_model <- randomForest(Species ~ ., data = iris_binary)
+
+# 예측
+predictions <- predict(rf_model, iris_binary)
+
+# Confusion Matrix 생성
+cm <- confusionMatrix(predictions, iris_binary$Species)
+
+# Confusion Matrix 시각화
+cm_d <- as.data.frame(cm$table)
+cm_d$Prediction <- factor(cm_d$Prediction, levels = rev(levels(cm_d$Prediction)))
+
+ggplot(cm_d, aes(Prediction, Reference, fill = Freq)) +
+  geom_tile() +
+  geom_text(aes(label = sprintf("%d", Freq)), vjust = 0.5) +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  theme_minimal() +
+  labs(title = "Confusion Matrix") +
+  coord_fixed()
+
+# 평가 지표 시각화
+metrics <- data.frame(
+  Metric = c("Accuracy", "Precision", "Recall", "F1", "Specificity"),
+  Value = c(cm$overall['Accuracy'], 
+            cm$byClass['Precision'],
+            cm$byClass['Recall'],
+            cm$byClass['F1'],
+            cm$byClass['Specificity'])
+)
+
+ggplot(metrics, aes(x = Metric, y = Value)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = sprintf("%.3f", Value)), vjust = -0.3) +
+  theme_minimal() +
+  labs(title = "Model Performance Metrics") +
+  ylim(0, 1)
+
+# 설명:
+# 1. randomForest 모델을 훈련시키고 예측을 수행합니다.
+# 2. confusionMatrix 함수를 사용하여 confusion matrix와 관련 지표를 계산합니다.
+# 3. ggplot2를 사용하여 confusion matrix를 히트맵 형태로 시각화합니다.
+# 4. 주요 평가 지표들을 막대 그래프로 시각화합니다.
+
+# 이 코드를 실행하면 confusion matrix와 주요 평가 지표들을 시각적으로 이해하기 쉽게 표현할 수 있습니다.
+```
+
+```{r}
+# 로지스틱 회귀 예제 (평가 지표 포함)
+library(caret)
+library(pROC)
+library(ggplot2)
+
+# 데이터 준비 (iris 데이터셋 사용)
+data(iris)
+# 간단한 이진 분류를 위해 setosa와 versicolor만 사용
+iris_binary <- iris[iris$Species != "virginica", ]
+iris_binary$Species <- factor(iris_binary$Species)
+
+# 교차 검증 설정
+ctrl <- trainControl(method = "cv", number = 5, 
+                     classProbs = TRUE, 
+                     summaryFunction = twoClassSummary)
+
+# 로지스틱 회귀 모델 생성 및 교차 검증
+model <- train(Species ~ Petal.Length + Petal.Width, 
+               data = iris_binary, 
+               method = "glm", 
+               family = "binomial",
+               trControl = ctrl,
+               metric = "ROC")
+
+# 모델 요약
+print(model)
+
+# 평가 지표
+print(model$results)
+
+# 혼동 행렬
+confusionMatrix(model)
+
+# ROC 곡선
+roc_obj <- roc(iris_binary$Species, predict(model, iris_binary, type = "prob")[, "versicolor"])
+plot(roc_obj, main = paste("ROC Curve (AUC =", round(auc(roc_obj), 3), ")"))
+
+# 결정 경계 시각화
+ggplot(iris_binary, aes(x = Petal.Length, y = Petal.Width, color = Species)) +
+  geom_point() +
+  stat_function(fun = function(x) {-coef(model$finalModel)[1]/coef(model$finalModel)[3] - coef(model$finalModel)[2]/coef(model$finalModel)[3] * x}, 
+                geom = "line", color = "black") +
+  theme_minimal() +
+  labs(title = paste("로지스틱 회귀 - 결정 경계 (AUC =", round(auc(roc_obj), 3), ")"),
+       x = "꽃잎 길이",
+       y = "꽃잎 너비")
+
+# 설명:
+# 1. caret 패키지를 사용하여 5-fold 교차 검증을 수행합니다.
+# 2. twoClassSummary 함수를 사용하여 이진 분류에 적합한 평가 지표를 계산합니다.
+# 3. train() 함수로 모델을 생성하고 교차 검증을 수행합니다.
+# 4. 모델 요약과 평가 지표(ROC, Sensitivity, Specificity)를 출력합니다.
+# 5. 혼동 행렬을 생성하여 모델의 성능을 자세히 살펴봅니다.
+# 6. ROC 곡선을 그리고 AUC를 계산합니다.
+# 7. 결정 경계를 시각화하고 AUC 값을 포함합니다.
+
+# 이 예제를 통해 로지스틱 회귀 모델의 성능을 다양한 지표로 평가할 수 있습니다.
+```
+
+### 2.4 tidymodel 패키지를 이용한 머신러닝
+
+\[tidymodels 패키지\] <https://www.tidymodels.org/>
+
+```{mermaid}
+flowchart TD
+    A[데이터 준비] --> B[데이터 분할]
+    B --> C[레시피 정의]
+    B --> D[모델 명세]
+    C --> E[워크플로우 정의]
+    D --> E
+    E --> F[모델 학습]
+    F --> G[모델 평가]
+    G --> H[성능 시각화]
+    
+    A -. tidyverse .-> B
+    B -. rsample .-> C
+    B -. parsnip .-> D
+    C -. recipes .-> E
+    D -. parsnip .-> E
+    E -. workflows .-> F
+    F -. yardstick .-> G
+    G -. ggplot2 .-> H
+    
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px;
+    classDef highlight fill:#e6f3ff,stroke:#333,stroke-width:2px;
+    classDef package fill:#f9f9f9,stroke:#999,stroke-width:1px,color:#666;
+    
+    class A,B,C,D,E,F,G,H highlight;
+    class tidyverse,rsample,parsnip,recipes,workflows,yardstick,ggplot2 package;
+    
+    linkStyle default stroke:#666,stroke-width:1px;
+```
+
+```{r}
+# tidymodels를 이용한 회귀 및 분류 분석 예제
+# 필요한 패키지 설치 및 로드
+#install.packages("tidymodels")
+library(tidymodels)
+
+# 1. 회귀 분석 예제 (mtcars 데이터셋 사용)
+
+# 데이터 준비
+data(mtcars)
+set.seed(123)
+car_split <- initial_split(mtcars, prop = 0.7, strata = mpg)
+car_train <- training(car_split)
+car_test <- testing(car_split)
+
+# 모델 정의 (선형 회귀)
+lm_model <- linear_reg() %>% 
+  set_engine("lm")
+
+# 레시피 정의
+car_recipe <- recipe(mpg ~ ., data = car_train) %>%
+  step_normalize(all_predictors()) %>%
+  step_zv(all_predictors())
+
+# 워크플로우 정의
+lm_workflow <- workflow() %>%
+  add_model(lm_model) %>%
+  add_recipe(car_recipe)
+
+# 모델 학습
+lm_fit <- fit(lm_workflow, data = car_train)
+
+# 예측 및 평가
+car_predictions <- predict(lm_fit, new_data = car_test) %>%
+  bind_cols(car_test)
+
+# 평가 지표 계산
+car_metrics <- car_predictions %>%
+  metrics(truth = mpg, estimate = .pred)
+
+print("회귀 분석 결과:")
+print(car_metrics)
+
+# 2. 분류 분석 예제 (iris 데이터셋 사용)
+
+# 데이터 준비
+data(iris)
+set.seed(123)
+iris_split <- initial_split(iris, prop = 0.7, strata = Species)
+iris_train <- training(iris_split)
+iris_test <- testing(iris_split)
+
+# 모델 정의 (랜덤 포레스트)
+rf_model <- rand_forest() %>%
+  set_engine("ranger") %>%
+  set_mode("classification")
+
+# 레시피 정의
+iris_recipe <- recipe(Species ~ ., data = iris_train) %>%
+  step_normalize(all_predictors()) %>%
+  step_zv(all_predictors())
+
+# 워크플로우 정의
+rf_workflow <- workflow() %>%
+  add_model(rf_model) %>%
+  add_recipe(iris_recipe)
+
+# 모델 학습
+rf_fit <- fit(rf_workflow, data = iris_train)
+
+# 예측 및 평가
+iris_predictions <- predict(rf_fit, new_data = iris_test) %>%
+  bind_cols(predict(rf_fit, new_data = iris_test, type = "prob")) %>%
+  bind_cols(iris_test)
+
+# 평가 지표 계산
+iris_metrics <- iris_predictions %>%
+  metrics(truth = Species, estimate = .pred_class)
+
+print("분류 분석 결과:")
+print(iris_metrics)
+
+# ROC 커브 그리기
+iris_roc <- iris_predictions %>%
+  roc_curve(Species, .pred_setosa:.pred_virginica) %>%
+  autoplot()
+
+print(iris_roc)
+
+# 설명:
+# 1. 회귀 분석:
+#    - mtcars 데이터셋을 사용하여 mpg를 예측하는 선형 회귀 모델을 만듭니다.
+#    - initial_split()으로 데이터를 훈련셋과 테스트셋으로 나눕니다.
+#    - recipe()로 전처리 과정을 정의합니다.
+#    - workflow()로 모델과 전처리 과정을 결합합니다.
+#    - fit()으로 모델을 학습시키고, predict()로 예측을 수행합니다.
+#    - metrics()로 RMSE, R-squared 등의 평가 지표를 계산합니다.
+
+# 2. 분류 분석:
+#    - iris 데이터셋을 사용하여 Species를 분류하는 랜덤 포레스트 모델을 만듭니다.
+#    - 회귀 분석과 유사한 과정을 거치지만, set_mode("classification")으로 분류 모드를 설정합니다.
+#    - metrics()로 정확도, AUC 등의 평가 지표를 계산합니다.
+#    - roc_curve()와 autoplot()으로 ROC 커브를 그립니다.
+
+# 이 예제를 통해 tidymodels를 사용하여 일관된 방식으로 회귀와 분류 분석을 수행할 수 있음을 보여줍니다.
+```
+
+\[회귀분석_연습문제\]
+
+1.  데이터 준비: Ames 주택 가격 데이터셋을 로드하고 전처리합니다.
+
+2.  데이터 분할: 훈련 세트와 테스트 세트로 데이터를 나눕니다. 레시피 정의:
+
+3.  데이터 전처리 단계를 정의합니다.
+
+4.  모델 정의: Random Forest와 Elastic Net 모델을 정의합니다.
+
+5.  워크플로우 설정: 각 모델에 대한 워크플로우를 생성합니다.
+
+6.  교차 검증: 5-폴드 교차 검증을 설정합니다.
+
+7.  하이퍼파라미터 튜닝: 각 모델에 대해 그리드 탐색을 수행합니다.
+
+8.  최적 모델 선택: 최적의 하이퍼파라미터를 선택합니다.
+
+9.  최종 모델 학습: 선택된 하이퍼파라미터로 최종 모델을 학습시킵니다.
+
+10. 성능 평가: 테스트 세트에 대한 예측을 수행하고 성능을 평가합니다.
+
+```{r}
+# tidymodels를 이용한 모델 비교 예제 (수정됨)
+library(tidymodels)
+library(modeldata)
+library(ranger)
+library(glmnet)
+
+# 데이터 준비
+data(ames)
+ames <- mutate(ames, Sale_Price = log10(Sale_Price))
+
+set.seed(123)
+ames_split <- initial_split(ames, prop = 0.80, strata = Sale_Price)
+ames_train <- training(ames_split)
+ames_test  <- testing(ames_split)
+
+# 데이터 전처리 레시피 정의
+ames_rec <- 
+  recipe(Sale_Price ~ ., data = ames_train) %>% 
+  step_novel(all_nominal_predictors()) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_zv(all_predictors()) %>% 
+  step_normalize(all_predictors())
+
+# Random Forest 모델 정의 (trees 값 증가)
+rf_mod <- 
+  rand_forest(mtry = tune(), min_n = tune(), trees = 100) %>% 
+  set_engine("ranger") %>% 
+  set_mode("regression")
+
+# Elastic Net 모델 정의
+en_mod <-
+  linear_reg(penalty = tune(), mixture = tune()) %>% 
+  set_engine("glmnet")
+
+# 워크플로우 설정
+rf_workflow <- workflow() %>%
+  add_model(rf_mod) %>%
+  add_recipe(ames_rec)
+
+en_workflow <- workflow() %>%
+  add_model(en_mod) %>%
+  add_recipe(ames_rec)
+
+# 교차 검증 설정
+ames_folds <- vfold_cv(ames_train, v = 5)
+
+# 튜닝 그리드 설정
+rf_grid <- grid_regular(
+  mtry(range = c(1, 10)),
+  min_n(range = c(2, 10)),
+  levels = 5
+)
+
+en_grid <- grid_regular(
+  penalty(),
+  mixture(),
+  levels = 5
+)
+
+# 모델 튜닝
+rf_res <- 
+  rf_workflow %>% 
+  tune_grid(
+    resamples = ames_folds,
+    grid = rf_grid
+  )
+
+en_res <- 
+  en_workflow %>% 
+  tune_grid(
+    resamples = ames_folds,
+    grid = en_grid
+  )
+
+# 최적의 모델 선택 (수정된 부분)
+rf_best <- rf_res %>% select_best(metric = "rmse")
+en_best <- en_res %>% select_best(metric = "rmse")
+
+# 최종 워크플로우 생성
+rf_final <- finalize_workflow(rf_workflow, rf_best)
+en_final <- finalize_workflow(en_workflow, en_best)
+
+# 최종 모델 학습
+rf_fit <- rf_final %>% fit(ames_train)
+en_fit <- en_final %>% fit(ames_train)
+
+# 테스트 세트에 대한 예측
+rf_preds <- rf_fit %>% predict(ames_test) %>% bind_cols(ames_test)
+en_preds <- en_fit %>% predict(ames_test) %>% bind_cols(ames_test)
+
+# 모델 성능 평가
+rf_metrics <- rf_preds %>% metrics(truth = Sale_Price, estimate = .pred)
+en_metrics <- en_preds %>% metrics(truth = Sale_Price, estimate = .pred)
+
+# 결과 출력
+print("Random Forest 성능:")
+print(rf_metrics)
+
+print("Elastic Net 성능:")
+print(en_metrics)
+
+```
+```
+
+# 설명:
+# 1. 데이터를 준비하고 훈련/테스트 세트로 분할합니다.
+# 2. 데이터 전처리를 위한 레시피를 정의합니다.
+# 3. Random Forest와 Elastic Net 모델을 정의합니다.
+# 4. 각 모델에 대한 워크플로우를 설정합니다.
+# 5. 교차 검증을 위한 폴드를 생성합니다.
+# 6. 하이퍼파라미터 튜닝을 위한 그리드를 설정합니다.
+# 7. 각 모델에 대해 그리드 탐색을 수행합니다.
+# 8. 최적의 하이퍼파라미터를 선택하고 최종 모델을 학습시킵니다.
+# 9. 테스트 세트에 대한 예측을 수행하고 성능을 평가합니다.
+
+# 이 예제를 통해 tidymodels를 사용하여 여러 모델을 비교하고 
+# 최적화하는 과정을 볼 수 있습니다.
+
+```
+
+
+\[분류문제_예제\]
+
+1.  데이터 준비: two_class_dat 데이터셋을 사용하여 이진 분류 문제를 다룹니다.
+
+2.  데이터 분할: 훈련 세트와 테스트 세트로 데이터를 나눕니다.
+
+3.  레시피 정의: 예측변수를 정규화합니다. SMOTE(Synthetic Minority Over-sampling Technique)를 사용하여 클래스 불균형 문제를 해결합니다.
+
+4.  SVM 모델 정의: RBF 커널을 사용하는 SVM 모델을 정의하고, cost와 rbf_sigma를 튜닝 파라미터로 설정합니다.
+
+5.  워크플로우 설정: 모델과 레시피를 결합하여 워크플로우를 생성합니다.
+
+6.  교차 검증: 5-폴드 교차 검증을 사용합니다.
+
+7.  하이퍼파라미터 튜닝: grid_regular()를 사용하여 튜닝 그리드를 설정하고, tune_grid()로 최적의 하이퍼파라미터를 찾습니다.
+
+8.  최종 모델 학습: 최적의 하이퍼파라미터로 전체 훈련 데이터에 대해 모델을 학습시킵니다.
+
+9.  성능 평가: 테스트 세트에 대한 예측을 수행하고, 정확도, ROC AUC 등의 메트릭을 계산합니다.
+
+10. ROC 곡선 시각화: autoplot()을 사용하여 ROC 곡선을 그립니다.
+
+11. 변수 중요도: SVM은 직접적인 변수 중요도를 제공하지 않지만, 여기서는 alphaindex()를 사용하여 간단한 예시를 보여줍니다.
+
+```{r}
+# tidymodels를 이용한 SVM 분류 예제
+# 필요한 패키지 설치 및 로드
+library(tidymodels)
+library(kernlab)
+library(themis)  # SMOTE를 위한 패키지
+
+# 데이터 준비
+data(two_class_dat)
+
+# 데이터 분할
+set.seed(123)
+split <- initial_split(two_class_dat, strata = Class)
+train_data <- training(split)
+test_data <- testing(split)
+
+# 레시피 정의
+svm_rec <- recipe(Class ~ ., data = train_data) %>%
+  step_normalize(all_predictors()) %>%
+  step_smote(Class)  # 클래스 불균형 처리
+
+# SVM 모델 정의
+svm_spec <- svm_rbf(
+  cost = tune(),
+  rbf_sigma = tune()
+) %>%
+  set_engine("kernlab") %>%
+  set_mode("classification")
+
+# 워크플로우 설정
+svm_wflow <- workflow() %>%
+  add_model(svm_spec) %>%
+  add_recipe(svm_rec)
+
+# 교차 검증 설정
+set.seed(234)
+folds <- vfold_cv(train_data, v = 5)
+
+# 튜닝 그리드 설정
+svm_grid <- grid_regular(
+  cost(),
+  rbf_sigma(),
+  levels = 10
+)
+
+# 모델 튜닝
+tune_res <- tune_grid(
+  svm_wflow,
+  resamples = folds,
+  grid = svm_grid
+)
+
+# 최적의 하이퍼파라미터 선택
+best_params <- select_best(tune_res, metric = "roc_auc")
+
+# 최종 워크플로우 생성
+final_wflow <- finalize_workflow(svm_wflow, best_params)
+
+# 최종 모델 학습
+final_fit <- fit(final_wflow, data = train_data)
+
+# 테스트 세트에 대한 예측
+test_results <- augment(final_fit, test_data)
+
+# 모델 성능 평가
+final_metrics <- test_results %>%
+  metrics(truth = Class, estimate = .pred_class, .pred_Class1)
+
+# ROC 곡선 생성
+roc_curve <- test_results %>%
+  roc_curve(Class, .pred_Class1)
+
+# 결과 출력
+print("최적의 하이퍼파라미터:")
+print(best_params)
+
+print("\n최종 모델 성능:")
+print(final_metrics)
+
+# ROC 곡선 시각화
+roc_plot <- autoplot(roc_curve)
+print(roc_plot)
+
+
+
+```
+
+```
+설명:
+
+# 1. two_class_dat 데이터셋을 사용하여 이진 분류 문제를 해결합니다.
+# 2. 데이터를 훈련 세트와 테스트 세트로 분할합니다.
+# 3. 레시피를 정의하여 예측변수를 정규화하고 SMOTE로 클래스 불균형을 처리합니다.
+# 4. SVM 모델을 정의하고 cost와 rbf_sigma를 튜닝 파라미터로 설정합니다.
+# 5. 워크플로우를 설정하여 모델과 레시피를 결합합니다.
+# 6. 5-폴드 교차 검증을 사용하여 하이퍼파라미터를 튜닝합니다.
+# 7. 최적의 하이퍼파라미터를 선택하고 최종 모델을 학습시킵니다.
+# 8. 테스트 세트에 대한 예측을 수행하고 모델 성능을 평가합니다.
+# 9. ROC 곡선을 생성하여 모델의 성능을 시각화합니다.
+# 10. 변수 중요도를 간단히 살펴봅니다 (SVM의 경우 직접적인 방법은 제한적입니다).
+# 이 예제를 통해 tidymodels를 사용하여 SVM 모델을 튜닝하고
+
+# 평가하는 전체 과정을 볼 수 있습니다.
+
+```

@@ -170,7 +170,7 @@ diamonds |>
 
 #### 3. 깊이백분율 열을 아래 수식에 맞도록 새로 만든 후 head()를 쓴 후 , depth와 깊이백분율 열만 보이도록 하라. 이때 깊이백분율은 소수 첫째자리까지만 보이라.
 
-**깊이백분율 =  z / (x와 y의 평균) *100 **
+\*\*깊이백분율 = z / (x와 y의 평균) \*100 \*\*
 
 ```{r}
 #| echo: false
@@ -183,8 +183,7 @@ diamonds |>
 
 ```
 
-#### 4. color별로 carat의 평균과 price의 중간값을 보여라. carat은 소수 둘째자리까지만 보이고, price의 내림차순으로 정렬하라. 
-
+#### 4. color별로 carat의 평균과 price의 중간값을 보여라. carat은 소수 둘째자리까지만 보이고, price의 내림차순으로 정렬하라.
 
 ```{r}
 #| echo: false
@@ -197,7 +196,7 @@ diamonds |>
 
 ```
 
-#### 5. cut이 Premium	인 것중에서 carat이  가장 큰 값을 가지는 diamond의 가격은 얼마인가?
+#### 5. cut이 Premium 인 것중에서 carat이 가장 큰 값을 가지는 diamond의 가격은 얼마인가?
 
 ```{r}
 #| echo: false
@@ -212,15 +211,13 @@ diamonds |>
 
 ------------------------------------------------------------------------
 
-
-
-
 ## 3 Titanic
 
 *Titanic* 데이터 셋
 
 ![](https://miro.medium.com/v2/resize:fit:800/1*7ae00Bjo8x3qx1YZGEIdWw.jpeg)
-```
+
+```         
 PassengerId: 각 승객에게 주어진 고유 ID 번호
 Survived: 승객이 생존(1)했는지 사망(0)했는지 여부
 Pclass: 승객 등급
@@ -234,9 +231,10 @@ Fare: 티켓에 대해 지불한 금액
 Cabin: 객실 카테고리
 Embarked: 승객이 탑승한 항구(C = Cherbourg, Q = Queenstown, S = Southampton)
 ```
-r에서는 타이타닉 데이터를 좀더 간편하게 만든 내장데이터가 있다. data를 아래와 같이 불러와서 titanic 변수에 넣고 시작하자.   
 
-titanic <- as.data.frame(Titanic)
+r에서는 타이타닉 데이터를 좀더 간편하게 만든 내장데이터가 있다. data를 아래와 같이 불러와서 titanic 변수에 넣고 시작하자.
+
+titanic \<- as.data.frame(Titanic)
 
 ```{r}
 titanic <- as.data.frame(Titanic)
@@ -244,9 +242,7 @@ head(titanic)
 
 ```
 
-
 #### 1. 탑승자 중 여자 아이의 총 수는 몇명인가?
-
 
 ```{r}
 #| echo: false
@@ -268,8 +264,7 @@ titanic |>
 
 ```
 
-#### 3.Sex별, Age별 생존자가 몇명인지 보이시오. 
-
+#### 3.Sex별, Age별 생존자가 몇명인지 보이시오.
 
 ```{r}
 #| echo: false
@@ -300,7 +295,7 @@ left_join(titanic1, titanic2) |>
 
 ```
 
-#### 5. Class별 생존율을 구하시오. 
+#### 5. Class별 생존율을 구하시오.
 
 ```{r}
 #| echo: false
@@ -319,6 +314,4 @@ left_join(titanic3, titanic4) |>
 
 ```
 
-
 ------------------------------------------------------------------------
-
