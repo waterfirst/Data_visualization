@@ -1798,11 +1798,13 @@ tree_model <- rpart(Species ~ ., data = train_data, method = "class")
 summary(tree_model)
 
 # 결정 트리 시각화
-rpart.plot(tree_model, box.palette = "RdYlBu", shadow.col = "gray", nn = TRUE)
+rpart.plot(tree_model, 
+           box.palette = "GnBu", # 녹색에서 파란색으로 변화하는 팔레트
+           type = 2,            # 다른 스타일의 트리
+           fallen.leaves = TRUE, # 말단 노드를 아래쪽에 정렬
+           extra = 1)           # 추가 정보 표시
 
 # 변수 중요도 시각화
-    importance_df <- as.data.frame(importance(rf_model))
-    importance_df$feature <- rownames(importance_df)
 
 importance_df <- data.frame(
   feature = names(tree_model$variable.importance),
@@ -2203,8 +2205,6 @@ ggplot(iris_binary, aes(x = Petal.Length, y = Petal.Width, color = Species)) +
 
 # 이 예제를 통해 로지스틱 회귀 모델의 성능을 다양한 지표로 평가할 수 있습니다.
 ```
-
-### 
 
 ### 2.4 tidymodel 패키지를 이용한 머신러닝
 

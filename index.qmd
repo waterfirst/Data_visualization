@@ -1896,9 +1896,8 @@ df |>
   gtsave("tab_1.png", expand = 10)
 ```
 
-## Day4
 
-### 1. 지도그리기
+#### 지도그리기
 
 \[datatoys\]<https://github.com/statgarten/datatoys>
 
@@ -1928,7 +1927,10 @@ leaflet() %>%
 
 ```
 
-### 2. 머신러닝
+## Day4
+
+
+### 1. 머신러닝
 
 ![참조 : https://star7sss.tistory.com/410](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FS3MxJ%2FbtryQ1SaveU%2F9JsPZ0BPGJG1ubb4Tds8q0%2Fimg.png)
 
