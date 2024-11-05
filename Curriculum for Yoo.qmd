@@ -1,0 +1,140 @@
+---
+title: "R을 이용한 데이터 전처리와 시각화 기초 코스"
+author: "waterfirst"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    link-external-icon: true
+    link-external-newwindow: true
+    link-external-filter: '^(?:http:|https:)\/\/www\.quarto\.org\/custom'
+editor: visual
+code-fold: true
+Rendering:
+  embed-resources: true
+execute:
+  message : false
+  warning : false
+  error : false
+  echo : true
+lightbox: true
+---
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/1200px-R_logo.svg.png)
+
+<br/>
+
+------------------------------------------------------------------------
+
+## 1 Introduction
+
+이 수업은 코딩을 전혀 모르는 사람들을 대상으로 숫자로 된 데이터를 적절히 칼질하여 요리할 수 있도록 하는 것을 목적으로 만들었습니다.
+
+반복적으로 정형화된 데이터를 처리하고 그래프를 그리는 연구원들은 최종적으로는 자신의 결과물을 알기 쉽게 표현하는 것입니다.
+
+이를 위해 tidyverse 패키지 하나만으로 얼마나 쉽게 데이터를 다룰 수 있는지 R의 장점이 무엇인지 알 수 있는 시간이 될 것입니다.
+
+**R 언어 간단 소개**
+
+두명의 뉴질랜드 통계학자가 만듦 : 로버트 젠틀맨(Robert Gentleman)과 로스 이하카(Ross Ihaka)
+
+해들리 위컴에 의해 빅데이터 툴로 발전함 (대표적 : ggplot, tidyverse) <br/>
+
+![](https://149357281.v2.pressablecdn.com/wp-content/uploads/2017/09/9.28-1.png)
+
+**언어의 특징**
+
+1부터 시작 (다른 언어들은 0부터 시작)
+
+**패키지 설치, 불러오기**
+
+-   install.packages(“패키지이름”)
+
+-   library(패키지이름)
+
+------------------------------------------------------------------------
+
+## 2 강의순서
+
+<br/>
+
+### 1. R 설치, 기본문법 및 전처리 (1주차)
+
+```         
+<https://dplyr.tidyverse.org/articles/dplyr.html>
+<https://m-clark.github.io/data-processing-and-visualization/intro.html>
+```
+
+### 2. 데이터 불러오기, 데이터 시각화 ggplot (2주차)
+
+#### 1. 데이터불러오기
+
+To learn more about **tidyr** see <https://tidyr.tidyverse.org/reference/pivot_longer.html/>.
+
+#### 2. R의 내장 데이터에서 불러오기
+
+```         
+data() , help("AirPassengers")
+```
+
+<https://vincentarelbundock.github.io/Rdatasets/datasets.html>
+
+#### 3. 외장데이터 불러오기 (package 설치, library로 불러오기)
+
+```         
+gapminder : 세계 여러 국가의 인구, 경제, 건강 등의 데이터를 포함
+
+<https://r-graph-gallery.com/>
+```
+
+#### 4. 클릭보드(엑셀)에서 붙여넣기
+
+```         
+datapaste 패키지 설치 -\> 엑셀에서 ctrl+c -\> RStudio의 Addins에서 Paste as tribble
+```
+
+<!-- -->
+
+#### 5. csv 파일에서 불러오기
+
+#### 6. 엑셀파일 불러오기
+
+<https://readxl.tidyverse.org/>
+
+<br/>
+
+------------------------------------------------------------------------
+
+### 3. 데이터 시각화
+
+\[ggplot 갤러리\] [The R Graph Gallery – Help and inspiration for R charts (r-graph-gallery.com)](https://r-graph-gallery.com/)
+
+\[한국 R 사용자회 – 챗GPT 데이터 시각화 (r2bit.com)\] <https://r2bit.com/bitSlide/chatgpt_viz_202406.html#/데이터-시각화>
+
+\[참고 자료\] <https://waterfirst.quarto.pub/r_course/#/title-slide>
+
+\[참고 자료\] <https://rstudio.github.io/cheatsheets/html/data-visualization.html>
+
+<br/>
+
+------------------------------------------------------------------------
+
+### 4. 머신러닝 (회귀/분류) (4주차)
+
+![참조 : https://star7sss.tistory.com/410](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FS3MxJ%2FbtryQ1SaveU%2F9JsPZ0BPGJG1ubb4Tds8q0%2Fimg.png)
+
+![](images/machine_learning_1.png)
+
+R에서 회귀 분석을 위해 사용할 수 있는 주요 패키지들을 사용하여 예제 위주로 배우게 됩니다.
+
+-   `stats`: R의 기본 패키지로, 선형 회귀를 위한 `lm()` 함수를 제공합니다.
+
+-   `glmnet`: 정규화된 일반화 선형 모델을 위한 패키지입니다.
+
+-   `randomForest`: 랜덤 포레스트 알고리즘을 구현한 패키지입니다.
+
+-   `rpart`: 결정 트리 알고리즘을 구현한 패키지입니다.
+
+-   `e1071`: 서포트 벡터 머신(SVM)을 포함한 여러 기계학습 알고리즘을 제공합니다.
+
+-   `class`: k-최근접 이웃(KNN) 알고리즘을 위한 패키지입니다.

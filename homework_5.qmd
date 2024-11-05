@@ -1,0 +1,377 @@
+---
+title: "화장품 논문 분석을 통한 트렌드 보고서"
+author: "waterfirst"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    link-external-icon: true
+    link-external-newwindow: true
+    link-external-filter: '^(?:http:|https:)\/\/www\.quarto\.org\/custom'
+editor: visual
+code-fold: true
+Rendering:
+  embed-resources: true
+execute:
+  message : false
+  warning : false
+  error : false
+  echo : true
+lightbox: true
+---
+
+```{r setup, include=FALSE}
+library(RISmed)
+library(tidyverse)
+library(wordcloud2)
+library(htmlwidgets)
+library(RColorBrewer)
+library(knitr)
+library(kableExtra)
+
+
+# 패키지 로드
+library(tidyverse)
+library(meta)
+library(bibliometrix)
+library(tm)
+
+# 필요한 패키지 로드
+library(RISmed)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(wordcloud)
+library(RColorBrewer)
+library(purrr)
+library(wordcloud2)
+library(htmlwidgets)
+
+```
+
+```{r}
+
+# 현재 년도 구하기
+current_year <- as.numeric(format(Sys.Date(), "%Y"))
+start_year <- current_year - 9
+
+# PubMed 검색 및 데이터 추출 함수 (수정됨)
+search_and_extract <- function(company, start_year) {
+  query <- paste0('("', company, '"[Affiliation]) AND (cosmetics OR skincare OR "skin care" OR beauty OR dermatology) AND ("', start_year, '"[PDAT] : "', current_year, '"[PDAT])')
+  search_result <- EUtilsSummary(query, type="esearch", db="pubmed", retmax=5000)
+  articles <- EUtilsGet(search_result)
+  
+  years <- YearPubmed(articles)
+  keywords <- Keywords(articles)
+  
+  # 키워드를 문자열로 결합
+  keywords <- sapply(keywords, function(x) paste(x, collapse = ", "))
+  
+  # 데이터프레임 생성
+  data.frame(
+    PY = years,
+    DE = keywords,
+    stringsAsFactors = FALSE
+  ) %>%
+    mutate(PY = as.numeric(PY)) %>%
+    filter(!is.na(PY) & PY >= start_year)
+}
+
+# 데이터 추출
+shiseido_data <- search_and_extract("Shiseido", start_year)
+loreal_data <- search_and_extract("L'Oreal", start_year)
+cosmax_data <- search_and_extract("Cosmax", start_year)
+
+# 키워드 트렌드 분석 함수
+analyze_keyword_trends <- function(data, company_name) {
+  yearly_keywords <- data %>%
+    separate_rows(DE, sep = ", ") %>%
+    mutate(DE = trimws(DE)) %>%
+    filter(!is.na(DE) & DE != "" & DE != "NA") %>%
+    mutate(DE = tolower(DE)) %>%
+    group_by(PY, DE) %>%
+    summarise(count = n(), .groups = 'drop') %>%
+    arrange(PY, desc(count))
+  
+  top_keywords <- yearly_keywords %>%
+    group_by(DE) %>%
+    summarise(total_count = sum(count), .groups = 'drop') %>%
+    top_n(3, total_count) %>%
+    pull(DE)
+  
+  trend_data <- yearly_keywords %>%
+    filter(DE %in% top_keywords)
+  
+  trend_plot <- ggplot(trend_data, aes(x = PY, y = count, color = DE)) +
+    geom_line() +
+    geom_point() +
+    theme_minimal() +
+    labs(title = paste(company_name, "- Top 3 Keyword Trends Over Time"),
+         x = "Year", y = "Frequency",
+         color = "Keyword") +
+    theme(legend.position = "right")
+  
+  wordcloud_data <- yearly_keywords %>%
+    group_by(DE) %>%
+    summarise(count = sum(count), .groups = 'drop') %>%
+    arrange(desc(count)) %>%
+    head(100)
+  
+  wordcloud_plot <- wordcloud2(data = wordcloud_data, 
+                               size = 0.5, 
+                               shape = 'circle',
+                               rotateRatio = 0,
+                               minSize = 5,
+                               color = colorRampPalette(brewer.pal(8, "Dark2"))(nrow(wordcloud_data)))
+  
+ 
+ 
+  
+  return(list(trend_plot = trend_plot,
+              wordcloud = wordcloud_plot,
+              keyword_changes = trend_data))
+}
+
+```
+
+```{r}
+
+# 각 회사별 분석 실행
+shiseido_analysis <- analyze_keyword_trends(shiseido_data, "Shiseido")
+loreal_analysis <- analyze_keyword_trends(loreal_data, "L'Oreal")
+cosmax_analysis <- analyze_keyword_trends(cosmax_data, "Cosmax")
+```
+
+```{r}
+
+# 검색 함수 정의
+search_company_papers <- function(company, start_year) {
+  query <- paste0('("', company, '"[Affiliation]) AND (cosmetics OR skincare OR "skin care" OR beauty OR dermatology) AND ("', start_year, '"[PDAT] : "', current_year, '"[PDAT])')
+  search_result <- EUtilsSummary(query, type="esearch", db="pubmed", retmax=5000)
+  return(search_result)
+}
+
+# 연도별 논문 수 계산 함수 (수정됨)
+get_yearly_counts <- function(search_result, start_year, end_year) {
+  fetch_result <- EUtilsGet(search_result)
+  years <- as.numeric(YearPubmed(fetch_result))
+  year_counts <- table(factor(years, levels = start_year:end_year))
+  return(as.vector(year_counts))
+}
+
+
+shiseido_search <- search_company_papers("Shiseido", start_year)
+loreal_search <- search_company_papers("L'Oreal", start_year)
+cosmax_search <- search_company_papers("Cosmax", start_year)
+
+# 연도별 논문 수 계산 (수정됨)
+shiseido_counts <- get_yearly_counts(shiseido_search, start_year, current_year)
+loreal_counts <- get_yearly_counts(loreal_search, start_year, current_year)
+cosmax_counts <- get_yearly_counts(cosmax_search, start_year, current_year)
+
+
+```
+
+## 1. 서론
+
+본 보고서는 시세이도와 로레알, 두 글로벌 화장품 기업의 최근 10년간 연구 논문을 분석하여 화장품 산업의 트렌드를 파악하고, 이를 바탕으로 대한민국 화장품 회사들의 향후 연구개발 전략을 제시하고자 합니다.
+
+## 2. 데이터 개요
+
+-   분석 기간: `r start_year`년부터 `r current_year`년까지
+-   데이터 소스: PubMed
+-   분석 대상 기업: 시세이도, 로레알, 코스맥스
+
+### 2.1 논문 수 비교
+
+```{r}
+data.frame(
+  Company = c("시세이도", "로레알", "코스맥스"),
+  Papers = c(nrow(shiseido_data), nrow(loreal_data), nrow(cosmax_data))
+) %>%
+  kable() %>%
+  kable_styling(full_width = FALSE)
+
+
+
+# PubMed 검색 결과 그래프 생성
+plot_data <- data.frame(
+  Year = rep(start_year:current_year, 3),
+  Count = c(shiseido_counts, loreal_counts, cosmax_counts),
+  Company = rep(c("Shiseido", "L'Oreal", "Cosmax"), each = length(start_year:current_year))
+)
+
+p_pubmed <- ggplot(plot_data, aes(x = Year, y = Count, fill = Company)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "PubMed: 화장품 관련 연구 논문 수 (최근 10년)",
+       x = "연도", y = "논문 수") +
+  scale_x_continuous(breaks = start_year:current_year) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p_pubmed 
+```
+
+## 3. 키워드 트렌드 분석
+
+### 3.1 키워드 트렌드 그래프
+
+#### 시세이도
+
+```{r}
+shiseido_analysis$trend_plot
+```
+
+#### 로레얄
+
+```{r}
+loreal_analysis$trend_plot
+```
+
+#### 코스맥스
+
+```{r}
+cosmax_analysis$trend_plot
+```
+
+### 3.2 워드클라우드
+
+#### 시세이도
+
+![](images/스크린샷 2024-09-03 005051.png)
+
+#### 로레얄
+
+![](images/스크린샷 2024-09-03 005112.png)
+
+#### 코스맥스
+
+![](images/스크린샷 2024-09-03 005126.png)
+
+#### 3.3 주요 키워드 변화
+
+#### 시세이도
+
+```{r}
+
+ # 키워드 변화 분석 (수정됨)
+s_keyword_changes <- shiseido_analysis$keyword_changes %>%
+    group_by(DE) %>%
+    summarise(
+      first_year = min(PY),
+      last_year = max(PY),
+      max_count = max(count),
+      years_present = n_distinct(PY),
+      .groups = 'drop'
+    ) %>%
+    mutate(
+      status = case_when(
+        first_year == max(shiseido_analysis$keyword_changes$PY) ~ "New",
+        last_year < max(shiseido_analysis$keyword_changes$PY) ~ "Disappeared",
+        years_present == (max(shiseido_analysis$keyword_changes$PY) - min(shiseido_analysis$keyword_changes$PY) + 1) ~ "Consistent",
+        TRUE ~ "Fluctuating"
+      ),
+      Company = "shiseido"
+    )  |> 
+    group_by(status) %>%
+  slice_max(order_by = max_count, n = 5) %>%
+  ungroup()
+
+  
+
+
+kable(s_keyword_changes) %>%
+  kable_styling(full_width = FALSE) %>%
+  collapse_rows(columns = 1, valign = "top")
+```
+
+#### 로레얄
+
+```{r}
+
+ # 키워드 변화 분석 (수정됨)
+l_keyword_changes <- loreal_analysis$keyword_changes %>%
+    group_by(DE) %>%
+    summarise(
+      first_year = min(PY),
+      last_year = max(PY),
+      max_count = max(count),
+      years_present = n_distinct(PY),
+      .groups = 'drop'
+    ) %>%
+    mutate(
+      status = case_when(
+        first_year == max(loreal_analysis$keyword_changes$PY) ~ "New",
+        last_year < max(loreal_analysis$keyword_changes$PY) ~ "Disappeared",
+        years_present == (max(loreal_analysis$keyword_changes$PY) - min(loreal_analysis$keyword_changes$PY) + 1) ~ "Consistent",
+        TRUE ~ "Fluctuating"
+      ),
+      Company = "loreal"
+    )  |> 
+    group_by(status) %>%
+  slice_max(order_by = max_count, n = 5) %>%
+  ungroup()
+
+  
+
+
+kable(l_keyword_changes) %>%
+  kable_styling(full_width = FALSE) %>%
+  collapse_rows(columns = 1, valign = "top")
+```
+
+#### 코스맥스
+
+```{r}
+
+ # 키워드 변화 분석 (수정됨)
+c_keyword_changes <- cosmax_analysis$keyword_changes %>%
+    group_by(DE) %>%
+    summarise(
+      first_year = min(PY),
+      last_year = max(PY),
+      max_count = max(count),
+      years_present = n_distinct(PY),
+      .groups = 'drop'
+    ) %>%
+    mutate(
+      status = case_when(
+        first_year == max(cosmax_analysis$keyword_changes$PY) ~ "New",
+        last_year < max(cosmax_analysis$keyword_changes$PY) ~ "Disappeared",
+        years_present == (max(cosmax_analysis$keyword_changes$PY) - min(cosmax_analysis$keyword_changes$PY) + 1) ~ "Consistent",
+        TRUE ~ "Fluctuating"
+      ),
+      Company = "cosmax"
+    )  |> 
+    group_by(status) %>%
+  slice_max(order_by = max_count, n = 5) %>%
+  ungroup()
+
+  
+
+
+kable(c_keyword_changes) %>%
+  kable_styling(full_width = FALSE) %>%
+  collapse_rows(columns = 1, valign = "top")
+```
+
+## 4. 대한민국 화장품 회사를 위한 연구개발 전략
+
+1.  **혁신적 성분 연구**: 새로운 키워드에서 볼 수 있듯이, 항산화 성분, 피부 마이크로바이옴, 지속가능한 원료 등에 대한 연구가 중요해지고 있습니다. 이러한 분야에 집중적인 투자가 필요합니다.
+
+2.  **기술 융합**: AI, 빅데이터 등 첨단 기술을 화장품 개발에 접목시키는 연구가 증가하고 있습니다. 이를 활용한 개인 맞춤형 화장품 개발에 주력해야 합니다.
+
+3.  **지속가능성 강화**: 환경 친화적이고 윤리적인 제품 개발이 트렌드입니다. 친환경 패키징, 천연 원료 사용 등을 고려한 연구개발이 필요합니다.
+
+4.  **피부 건강 중심**: 단순한 미용 효과를 넘어 피부 건강을 증진시키는 제품 개발에 집중해야 합니다. 피부 장벽 강화, 염증 감소 등의 키워드에 주목해야 합니다.
+
+5.  **아시아 특화 연구**: 아시아 피부 특성에 맞는 제품 개발에 주력하여 글로벌 시장에서의 경쟁력을 확보해야 합니다.
+
+6.  **임상 연구 강화**: 제품의 효능을 과학적으로 입증하는 임상 연구에 더 많은 투자가 필요합니다.
+
+7.  **다기능성 제품 개발**: 자외선 차단, 항노화, 미백 등 다양한 기능을 하나의 제품에 통합하는 연구가 필요합니다.
+
+8.  **디지털 뷰티 기술**: 온라인 피부 진단, 가상 메이크업 시뮬레이션 등 디지털 기술을 활용한 서비스 개발도 고려해야 합니다.
+
+## 5. 결론
+
+글로벌 화장품 기업들의 연구 트렌드 분석을 통해, 대한민국 화장품 회사들은 혁신적 성분 연구, 기술 융합, 지속가능성, 피부 건강 중심의 제품 개발에 주력해야 함을 알 수 있습니다. 이러한 전략을 바탕으로 연구개발을 진행한다면, 글로벌 시장에서의 경쟁력을 높일 수 있을 것입니다.

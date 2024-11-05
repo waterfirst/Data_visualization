@@ -4,7 +4,6 @@ format: html
 editor: visual
 ---
 
-
 ## 4. 머신러닝
 
 ### 회귀(regression) : 펭귄부리 높이
@@ -308,8 +307,6 @@ head(abc)
 -   이직할 사람 찾아내기
 
 \[DATA\]<https://www.kaggle.com/datasets/kukuroo3/hr-data-predict-change-jobscompetition-form/versions/1>
-
-
 
 #### 국회의원의석수 그래프
 

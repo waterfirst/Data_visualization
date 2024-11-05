@@ -1406,9 +1406,7 @@ p2 <- ggplotly(p)
 htmlwidgets::saveWidget(p2, "myplot.html")
 ```
 
-## 6. Day5
-
-### 1. 지도그리기
+#### 지도그리기
 
 \[datatoys\]<https://github.com/statgarten/datatoys>
 
@@ -1437,6 +1435,8 @@ leaflet() %>%
   addMarkers(lng = as.numeric(m$lng), lat = as.numeric(m$lat), popup=m$음식점명)
 
 ```
+
+## 7. Day4
 
 ### 2. 머신러닝
 
@@ -2064,7 +2064,7 @@ MSE의 제곱근입니다. 원래 데이터와 같은 단위를 가집니다.
 이 matrix를 바탕으로 다양한 평가 지표를 계산할 수 있습니다:
 
 | 지표                                      | 수식                                                                    | 설명                                         |
-|------------------------|------------------------|------------------------|
+|-------------------------------------------|-------------------------------------------------------------------------|----------------------------------------------|
 | 정확도 (Accuracy)                         | $\frac{TP + TN}{TP + TN + FP + FN}$                                     | 전체 예측 중 올바른 예측의 비율              |
 | 정밀도 (Precision)                        | $\frac{TP}{TP + FP}$                                                    | Positive로 예측한 것 중 실제 Positive의 비율 |
 | 재현율 (Recall) 또는 민감도 (Sensitivity) | $\frac{TP}{TP + FN}$                                                    | 실제 Positive 중 Positive로 예측한 비율      |
@@ -2075,7 +2075,7 @@ MSE의 제곱근입니다. 원래 데이터와 같은 단위를 가집니다.
 추가적인 지표들:
 
 | 지표                            | 수식                 | 설명                                         |
-|------------------------|------------------------|------------------------|
+|---------------------------------|----------------------|----------------------------------------------|
 | False Positive Rate (FPR)       | $\frac{FP}{FP + TN}$ | 실제 Negative 중 Positive로 잘못 예측한 비율 |
 | False Negative Rate (FNR)       | $\frac{FN}{TP + FN}$ | 실제 Positive 중 Negative로 잘못 예측한 비율 |
 | Positive Predictive Value (PPV) | $\frac{TP}{TP + FP}$ | 정밀도와 동일                                |
